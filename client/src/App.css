@@ -1,0 +1,35 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --white: #fff;
+  --black: #000;
+  --yellow: #fb0;
+  --gray1: #f0f0f0;
+  --gray2: #d9d9d9;
+  --gray3: #bfbfbf;
+  --gray4: #999999;
+  --gray5: #737373;
+  --gray6: #4d4d4d;
+  --gray7: #333333;
+  --gray8: #1f1f1f;
+  --gray9: #141414;
+  --gray10: #0a0a0a;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  background-color: var(--gray9);
+}

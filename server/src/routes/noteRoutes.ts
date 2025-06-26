@@ -5,6 +5,7 @@ import {
   deletePermanentNote,
   deleteTemporaryNote,
   getAllNotesByUser,
+  getAllTags,
   getNote,
   restoreNote,
   updateNote,
@@ -12,6 +13,7 @@ import {
 
 const routers = Router();
 
+routers.route('/tags').get(protect, getAllTags);
 routers.route('/').post(protect, createNote).get(protect, getAllNotesByUser);
 
 routers
@@ -19,7 +21,7 @@ routers
   .get(protect, getNote)
   .patch(protect, updateNote)
   .delete(protect, deleteTemporaryNote);
-routers.route('/permanent/:id').delete(protect, deletePermanentNote);
 routers.route('/restore/:id').patch(protect, restoreNote);
+routers.route('/permanent/:id').delete(protect, deletePermanentNote);
 
 export default routers;

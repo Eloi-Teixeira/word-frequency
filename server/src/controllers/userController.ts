@@ -15,7 +15,7 @@ const createAndSendToken = (user: any, res: Response) => {
   return res.status(201).json({
     success: true,
     message: 'Usuário criado com sucesso',
-    user,
+    data: user,
     token,
   });
 };
@@ -62,7 +62,7 @@ export const getUser = catchAsync(
         .status(404)
         .json({ message: 'Usuário não encontrado', status: false });
     }
-    return res.status(200).json({ success: true, user });
+    return res.status(200).json({ success: true, data: user });
   },
 );
 
@@ -73,7 +73,7 @@ export const getAllUsers = catchAsync(async (_req: Request, res: Response) => {
       .status(404)
       .json({ message: 'Nenhum usuário encontrado', status: false });
   }
-  return res.status(200).json({ success: true, users });
+  return res.status(200).json({ success: true, data: users });
 });
 
 export const updateUser = catchAsync(
@@ -104,7 +104,7 @@ export const updateUser = catchAsync(
         .status(404)
         .json({ message: 'Usuário não encontrado', status: false });
     }
-    return res.status(200).json({ success: true, user });
+    return res.status(200).json({ success: true, data: user });
   },
 );
 
@@ -115,5 +115,5 @@ export const deleteUser = catchAsync(async (req: Request, res: Response) => {
       .status(404)
       .json({ message: 'Usuário não encontrado', status: false });
   }
-  return res.status(204).json({ success: true, user });
+  return res.status(204).json({ success: true, data: user });
 });

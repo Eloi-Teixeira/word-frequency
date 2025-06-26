@@ -1,0 +1,50 @@
+.aside-notes {
+  width: 200px;
+  height: 100dvh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--gray8);
+  color: var(--white);
+  padding: 20px;
+}
+
+.aside-notes ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.aside-notes ul li {
+  padding: 8px 20px;
+  border-radius: 8px;
+  background-color: var(--gray7);
+  cursor: pointer;
+}
+
+.aside-notes > div {
+  margin-bottom: 4rem;
+}
+
+.aside-notes .tags-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.aside-notes .tags-header button {
+  background-color: transparent;
+  border: none;
+  color: var(--yellow);
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: .8rem;
+}
+
+.aside-notes .tags-header h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}

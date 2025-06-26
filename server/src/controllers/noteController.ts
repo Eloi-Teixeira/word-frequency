@@ -111,102 +111,154 @@ export const getNote = catchAsync(
 
 // Criar a função para atualizar uma nota e deletar uma nota
 
-export const updateNote = catchAsync(async (req: AuthRequest, res: Response, next: NextFunction) => {
-  const userId = req.user?.id
-  if (!userId) {
-    return res.status(401).json({
-      success: false,
-      message: 'Usuário não autorizado',
+export const updateNote = catchAsync(
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Usuário não autorizado',
+      });
+    }
+    const noteId = req.params.id;
+    const filteredBody = filterFields(req.body, [
+      'title',
+      'content',
+      'isDeleted',
+      'pinned',
+      'tags',
+    ]);
+    filteredBody.updatedAt = new Date();
+    const note = await Note.findOneAndUpdate(
+      { userId, _id: noteId },
+      filteredBody,
+      { new: true, runValidators: true },
+    );
+    if (!note) {
+      return res.status(404).json({
+        success: false,
+        message: 'Nota não encontrada',
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'Nota atualizada com sucesso',
+      data: note,
     });
-  }
-  const noteId = req.params.id;
-  const filteredBody = filterFields(req.body, ['title', 'content', 'isDeleted', 'pinned', 'tags' ]);
-  filteredBody.updatedAt = new Date();
-  const note = await Note.findOneAndUpdate({ userId, _id: noteId }, filteredBody, { new: true, runValidators: true });
-  if (!note) {
-    return res.status(404).json({
-      success: false,
-      message: 'Nota não encontrada',
+  },
+);
+
+export const deleteTemporaryNote = catchAsync(
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Usuário não autorizado',
+      });
+    }
+    const noteId = req.params.id;
+    const note = await Note.findOne({ userId, _id: noteId, isDeleted: false });
+    if (!note) {
+      return res.status(404).json({
+        success: false,
+        message: 'Nota não encontrada',
+      });
+    }
+    note.isDeleted = true;
+    await note.save();
+    return res.status(200).json({
+      success: true,
+      message: 'Nota deletada com sucesso',
+      data: note,
     });
-  }
-  return res.status(200).json({
-    success: true,
-    message: 'Nota atualizada com sucesso',
-    data: note,
-  });
-})
+  },
+);
 
-export const deleteTemporaryNote = catchAsync(async (req: AuthRequest, res: Response, next: NextFunction) => {
-  const userId = req.user?.id;
-  if (!userId) {
-    return res.status(401).json({
-      success: false,
-      message: 'Usuário não autorizado',
+export const deletePermanentNote = catchAsync(
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Usuário não autorizado',
+      });
+    }
+    const noteId = req.params.id;
+    const note = await Note.findOneAndDelete({ userId, _id: noteId });
+    if (!note) {
+      return res.status(404).json({
+        success: false,
+        message: 'Nota não encontrada',
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: 'Nota deletada com sucesso',
     });
-  }
-  const noteId = req.params.id;
+  },
+);
 
-  const note = await Note.findOne({ userId, _id: noteId, isDeleted: false });
-  if (!note) {
-    return res.status(404).json({
-      success: false,
-      message: 'Nota não encontrada',
+export const restoreNote = catchAsync(
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const userId = req.user?.id;
+    const noteId = req.params.id;
+
+    if (!userId) {
+      return res
+        .status(401)
+        .json({ success: false, message: 'Usuário não autorizado' });
+    }
+
+    const note = await Note.findOneAndUpdate(
+      { _id: noteId, userId, isDeleted: true },
+      { isDeleted: false, deletedAt: null },
+      { new: true },
+    );
+
+    if (!note) {
+      return res.status(404).json({
+        success: false,
+        message: 'Nota não encontrada ou não está na lixeira',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Nota restaurada com sucesso',
+      data: note,
     });
-  }
-  note.isDeleted = true;
-  await note.save();
-  return res.status(200).json({
-    success: true,
-    message: 'Nota deletada com sucesso',
-    data: note,
-  });
-})
+  },
+);
 
-export const deletePermanentNote = catchAsync(async (req: AuthRequest, res: Response, next: NextFunction) => {
-  const userId = req.user?.id;
-  if (!userId) {
-    return res.status(401).json({
-      success: false,
-      message: 'Usuário não autorizado',
+export const getAllTags = catchAsync(
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: 'Usuário não autorizado',
+      });
+    }
+    const notes = await Note.find({ userId, isDeleted: false });
+    if (!notes) {
+      return res.status(400).json({
+        success: false,
+        message: 'Erro ao buscar notas',
+      });
+    }
+    let tags: string[] = [];
+    notes.forEach((note) => {
+      if (note.tags && note.tags.length > 0) {
+        tags = [...tags, ...note.tags];
+      }
     });
-  }
-  const noteId = req.params.id;
 
-  const note = await Note.findOneAndDelete({ userId, _id: noteId });
-  if (!note) {
-    return res.status(404).json({
-      success: false,
-      message: 'Nota não encontrada',
-    });
-  }
-  return res.status(200).json({
-    success: true,
-    message: 'Nota deletada com sucesso',
-  });
-});
-
-
-export const restoreNote = catchAsync(async (req: AuthRequest, res: Response, next: NextFunction) => {
-  const userId = req.user?.id;
-  const noteId = req.params.id;
-
-  if (!userId) {
-    return res.status(401).json({ success: false, message: 'Usuário não autorizado' });
-  }
-
-  const note = await Note.findOneAndUpdate(
-    { _id: noteId, userId, isDeleted: true }, 
-    { isDeleted: false, deletedAt: null },
-    { new: true }
-  );
-
-  if (!note) {
-    return res.status(404).json({ success: false, message: 'Nota não encontrada ou não está na lixeira' });
-  }
-
-  return res.status(200).json({
-    success: true,
-    message: 'Nota restaurada com sucesso',
-    data: note,
-  });
-});
+    const uniqueTags = [...new Set(tags)]; 
+    return res.status(200).json({
+      success: true,
+      message: 'Tags encontradas com sucesso',
+      data: uniqueTags,
+    })
+  },
+);
