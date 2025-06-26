@@ -1,19 +1,9 @@
-import express, { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import User from '../models/userModel';
 import catchAsync from '../utils/catchAsync';
+import filterObj from '../utils/filterFields';
 
-const filterObj = (obj: any) => {
-  const newObj: any = {};
-  const allowedFields = ['name', 'email'];
-  allowedFields.forEach((field) => {
-    if (obj[field]) {
-      newObj[field] = obj[field];
-    }
-  });
-  return newObj;
-};
-
-const createAndSendToken = (user: any, res: express.Response) => {
+const createAndSendToken = (user: any, res: Response) => {
   const token = user.generateAuthToken();
   const cookieOptions = {
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -96,7 +86,7 @@ export const updateUser = catchAsync(
       );
     }
 
-    const filteredBody = filterObj(req.body);
+    const filteredBody = filterObj(req.body, ['name', 'email']);
     if (Object.keys(filteredBody).length === 0) {
       return res.status(400).json({
         message: 'Nenhum campo para atualizar',
