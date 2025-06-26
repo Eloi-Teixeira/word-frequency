@@ -72,7 +72,6 @@ export const getUser = catchAsync(
         .status(404)
         .json({ message: 'Usuário não encontrado', status: false });
     }
-    user.password = '';
     return res.status(200).json({ success: true, user });
   },
 );
@@ -115,7 +114,6 @@ export const updateUser = catchAsync(
         .status(404)
         .json({ message: 'Usuário não encontrado', status: false });
     }
-    user.password = '';
     return res.status(200).json({ success: true, user });
   },
 );

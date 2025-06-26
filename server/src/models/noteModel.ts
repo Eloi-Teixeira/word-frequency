@@ -5,12 +5,12 @@ const noteSchema = new Schema({
   title: { type: String, required: true },
   content: { type: String, required: true },
   pinned: { type: Boolean, default: false },
-  deleted: { type: Boolean, default: false },
+  isDeleted: { type: Boolean, default: false },
   tags: { type: [String], default: [] },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  status: String,
-})
+  latestVersionId: { type: Schema.Types.ObjectId, ref: 'NoteVersion', default: null },
+}, { timestamps: true })
 
 const Note = model('Note', noteSchema);
 export default Note;
