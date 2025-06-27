@@ -1,0 +1,70 @@
+.main-notes {
+  background-color: var(--gray9);
+  color: var(--white);
+  border-left: 1px solid var(--gray6);
+  border-right: 1px solid var(--gray6);
+}
+
+
+.main-notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  height: 80px;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--gray6);
+}
+
+.main-notes-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--gray1);
+}
+
+.main-notes-header svg {
+  cursor: pointer;
+  color: var(--gray3);
+  border-radius: .5rem;
+  padding: 10px;
+  transition: all .3s;
+  box-sizing: content-box;
+}
+
+.main-notes-header svg:hover {
+  color: var(--yellow);
+  background-color: var(--gray6);
+}
+
+.main-notes main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  max-height: calc(100dvh - 100px - 20px);
+}
+
+.main-notes-search {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--gray6);
+  position: relative;
+}
+
+.main-notes-search svg {
+  color: var(--gray3);
+  margin-right: 10px;
+  cursor: pointer;
+  right: 0;
+}
+.main-notes-search input {
+  width: 100%;
+  padding: 1rem;
+  color: var(--gray2);
+}
+
+.main-notes-search:hover,
+.main-notes-search:focus-within {
+  outline: none;
+  background-color: var(--gray8);
+}

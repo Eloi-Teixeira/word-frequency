@@ -3,7 +3,6 @@
   grid-template-rows: auto 1fr auto;
   width: 300px;
   height: 100dvh;
-  position: fixed;
   top: 0;
   left: 0;
   background-color: var(--gray8);

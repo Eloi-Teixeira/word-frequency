@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNotes } from '../context/notesContext';
+import { useNotes } from '../../context/notesContext';
 import { Link, NavLink } from 'react-router-dom';
 import {
   HelpCircle,

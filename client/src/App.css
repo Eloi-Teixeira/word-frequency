@@ -33,3 +33,24 @@ a {
 body {
   background-color: var(--gray9);
 }
+
+button {
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+input {
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+.App {
+  height: 100dvh;
+}
+
+.notes-page {
+  display: grid;
+  grid-template-columns: 300px auto 3fr;
+}

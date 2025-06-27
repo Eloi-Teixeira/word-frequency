@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { token, useUser } from './userContext';
 
-interface Note {
+export interface Note {
   _id: string;
   title: string;
   content: string;
@@ -20,6 +20,8 @@ interface Note {
 interface NotesContextProps {
   notes: Note[];
   setNotes: (notes: Note[]) => void;
+  selectedNote: Note | null;
+  setSelectedNote: (note: Note | null) => void;
 }
 
 const NotesContext = createContext<NotesContextProps | null>(null);
@@ -35,6 +37,7 @@ const getNotesFromServer = async () => {
       },
     });
     if (!response.ok) {
+      console.log(response)
       throw new Error('Erro ao obter notas do servidor');
     }
     const data = (await response.json()).data as Note[];
@@ -47,6 +50,7 @@ const getNotesFromServer = async () => {
 
 export const NotesProvider = ({ children }: { children: ReactNode }) => {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const { user } = useUser();
 
   useEffect(() => {
@@ -60,7 +64,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   return (
-    <NotesContext.Provider value={{ notes, setNotes }}>
+    <NotesContext.Provider value={{ notes, setNotes, selectedNote, setSelectedNote }}>
       {children}
     </NotesContext.Provider>
   );
