@@ -3,6 +3,7 @@
   color: var(--white);
   border-left: 1px solid var(--gray6);
   border-right: 1px solid var(--gray6);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 
@@ -42,6 +43,17 @@
   justify-content: center;
   overflow-y: auto;
   max-height: calc(100dvh - 100px - 20px);
+  overflow-x: hidden;
+}
+
+.main-notes  main::-webkit-scrollbar {
+  width: 10px;
+  background-color: transparent;
+}
+
+.main-notes  main::-webkit-scrollbar-thumb {
+  background-color: var(--gray6);
+  border-radius: 10px;
 }
 
 .main-notes-search {

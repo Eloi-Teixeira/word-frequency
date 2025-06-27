@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NotesPage from './pages/NotesPage';
 import { UserProvider } from './context/userContext';
 import { NotesProvider } from './context/notesContext';
+import { Link } from 'react-router-dom';
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
                 path="/"
                 element={
                   <div>
-                    <h1>DSFwe</h1>Home
+                    <h1>Home</h1><Link to={"/notes"}>Lodf</Link>
                   </div>
                 }
               />
