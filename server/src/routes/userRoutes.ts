@@ -3,6 +3,7 @@ import {
   createUser,
   getAllUsers,
   getUser,
+  login,
   updateUser,
 } from '../controllers/userController';
 import { protect } from '../middlewares/authMiddleware';
@@ -13,5 +14,6 @@ routes.route('/signup').post(createUser);
 
 routes.route('/').get(protect, getAllUsers);
 routes.route('/:id').get(getUser).patch(protect, updateUser);
+routes.route('/login').post(login);
 
 export default routes;

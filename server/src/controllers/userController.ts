@@ -3,7 +3,7 @@ import User from '../models/userModel';
 import catchAsync from '../utils/catchAsync';
 import filterObj from '../utils/filterFields';
 
-const createAndSendToken = (user: any, res: Response) => {
+const createAndSendToken = (user: any, res: Response, message: string, codeStatus?: number) => {
   const token = user.generateAuthToken();
   const cookieOptions = {
     expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -12,9 +12,9 @@ const createAndSendToken = (user: any, res: Response) => {
 
   user.password = undefined;
   res.cookie('token', token, cookieOptions);
-  return res.status(201).json({
+  return res.status(codeStatus ? codeStatus : 200).json({
     success: true,
-    message: 'Usuário criado com sucesso',
+    message: message,
     data: user,
     token,
   });
@@ -51,7 +51,7 @@ export const createUser = catchAsync(async (req: Request, res: Response) => {
       .status(400)
       .json({ message: 'Erro ao criar usuário', status: false });
   }
-  createAndSendToken(user, res);
+  createAndSendToken(user, res, 'Usuário criado com sucesso', 201);
 });
 
 export const getUser = catchAsync(
@@ -116,4 +116,23 @@ export const deleteUser = catchAsync(async (req: Request, res: Response) => {
       .json({ message: 'Usuário não encontrado', status: false });
   }
   return res.status(204).json({ success: true, data: user });
+});
+
+export const login = catchAsync(async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(404).json({
+      status: false,
+      message: 'Email ou senha invalido',
+    });
+  }
+
+  const user = await User.findOne({ email }).select('+password');
+  if (!user || !(await user.correctPassword(password, user.password))) {
+    return res
+      .status(404)
+      .json({ message: 'Usuário não encontrado', status: false });
+  }
+
+  createAndSendToken(user, res, "Usuário logado com sucesso");
 });

@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { InferSchemaType, Schema, model } from 'mongoose';
 import dotenv from 'dotenv';
 import bcript from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -45,5 +45,19 @@ userSchema.methods.generateAuthToken = function () {
   return token;
 };
 
-const User = model('User', userSchema);
+userSchema.methods.correctPassword = async function (
+  password: string,
+  userPassword: string,
+) {
+  return await bcript.compare(password, userPassword);
+};
+
+type UserDocument = InferSchemaType<typeof userSchema> & {
+  correctPassword(
+    candidatePassword: string,
+    userPassword: string,
+  ): Promise<boolean>;
+  generateAuthToken(): string;
+};
+const User = model<UserDocument>('User', userSchema);
 export default User;
