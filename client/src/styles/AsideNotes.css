@@ -1,37 +1,43 @@
 .aside-notes {
-  width: 200px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  width: 300px;
   height: 100dvh;
   position: fixed;
   top: 0;
   left: 0;
   background-color: var(--gray8);
   color: var(--white);
-  padding: 20px;
+  padding: 80px 1.5rem 1.5rem;
 }
 
 .aside-notes ul {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 20px;
+  gap: .25rem;
+  margin-block: 1.5rem;
+  width: 100%;
 }
 
 .aside-notes ul li {
-  padding: 8px 20px;
-  border-radius: 8px;
-  background-color: var(--gray7);
+  border-radius: .8rem;
+  overflow: hidden;
   cursor: pointer;
+  width: 100%;
 }
 
-.aside-notes > div {
-  margin-bottom: 4rem;
+.aside-notes ul li a {
+  padding: .75rem 1.5rem;
+  width: 100%;
+  display: flex;
 }
 
 .aside-notes .tags-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
+  margin-top: 2rem;
 }
 
 .aside-notes .tags-header button {
@@ -40,11 +46,61 @@
   color: var(--yellow);
   cursor: pointer;
   text-transform: uppercase;
-  font-size: .8rem;
+  font-size: 0.8rem;
+}
+
+.aside-notes .tags-header button:hover {
+  text-decoration: underline;
 }
 
 .aside-notes .tags-header h2 {
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
+}
+
+.aside-notes .tags-container .tag:hover,
+.aside-notes ul li a.active,
+.aside-notes ul li a:hover {
+  background-color: var(--gray7);
+}
+
+.aside-notes ul li a svg {
+  margin-right: 10px;
+}
+
+.aside-notes .tags-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.aside-notes .tags-container .tag {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem;
+  border-radius: .5rem;
+}
+
+.aside-notes > div {
+  border-top: 1px solid var(--gray7);
+}
+
+.aside-notes footer {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  height: 100%;
+  text-align: center;
+  color: var(--gray2);
+}
+
+.aside-notes footer a {
+  font-size: 0.8rem;
+  padding: .5rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.aside-notes footer a:hover {
+  color: var(--yellow);
 }

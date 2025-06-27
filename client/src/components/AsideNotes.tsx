@@ -1,10 +1,19 @@
 import React from 'react';
 import { useNotes } from '../context/notesContext';
-import { HelpCircle, Settings, StickyNote, Tags, Trash } from 'lucide-react';
+import { Link, NavLink } from 'react-router-dom';
+import {
+  HelpCircle,
+  Settings,
+  StickyNote,
+  Tag,
+  Tags,
+  Trash,
+} from 'lucide-react';
 
 export default function AsideNotes() {
   const [tags, setTags] = React.useState<string[]>([]);
   const { notes } = useNotes();
+
   if (!notes || notes.length === 0) {
   } else {
     notes.forEach((note) => {
@@ -15,31 +24,40 @@ export default function AsideNotes() {
       });
     });
   }
-  console.log(tags);
 
   return (
     <aside className="aside-notes">
       <div>
         <ul>
           <li>
-            <StickyNote size={16} />
-            Todas as notas
+            <NavLink to={'/notes'} end>
+              <StickyNote size={16} />
+              Todas as notas
+            </NavLink>
           </li>
           <li>
-            <Settings size={16} />
-            Configurações
+            <Link to={'/notes/settings'}>
+              <Settings size={16} />
+              Configurações
+            </Link>
           </li>
           <li>
-            <Tags size={16} />
-            Todas as Tags
+            <NavLink to={'/notes/tags'}>
+              <Tags size={16} />
+              Todas as Tags
+            </NavLink>
           </li>
           <li>
-            <HelpCircle size={16} />
-            Ajuda e Suporte
+            <Link to={'/notes/help'}>
+              <HelpCircle size={16} />
+              Ajuda e Suporte
+            </Link>
           </li>
           <li>
-            <Trash size={16} />
-            Lixeira
+            <NavLink to="/notes/trash">
+              <Trash size={16} />
+              Lixeira
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -47,12 +65,25 @@ export default function AsideNotes() {
         <div className="tags-header">
           <h2>Tags</h2> <button>Edit</button>
         </div>
-        {tags.length !== 0 ? (
-          tags.map((tag) => <div key={tag}># {tag}</div>)
-        ) : (
-          <span>Você não possui tags</span>
-        )}
+        <div className="tags-container">
+          {tags.length !== 0 ? (
+            tags.map((tag, i) =>
+              i < 9 ? (
+                <Link to={`/notes/${tag}`} className="tag" key={tag}>
+                  <Tag size={16} /> {tag}
+                </Link>
+              ) : null,
+            )
+          ) : (
+            <span>Você não possui tags</span>
+          )}
+        </div>
       </div>
+
+      <footer>
+        <Link to={'shortcuts'}>Atalhos</Link>
+        <Link to={'/about'}>Sobre e Contato</Link>
+      </footer>
     </aside>
   );
 }
