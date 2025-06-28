@@ -6,7 +6,6 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
 .main-notes-header {
   display: flex;
   align-items: center;
@@ -17,43 +16,24 @@
   border-bottom: 1px solid var(--gray6);
 }
 
-.main-notes-header h1 {
-  font-size: 2rem;
-  font-weight: 600;
+.main-notes-header h2 {
   color: var(--gray1);
+  user-select: none;
 }
 
 .main-notes-header svg {
   cursor: pointer;
   color: var(--gray3);
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   padding: 10px;
-  transition: all .3s;
+  transition: all 0.3s;
   box-sizing: content-box;
+  user-select: none;
 }
 
 .main-notes-header svg:hover {
   color: var(--yellow);
   background-color: var(--gray6);
-}
-
-.main-notes main {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow-y: auto;
-  max-height: calc(100dvh - 100px - 20px);
-  overflow-x: hidden;
-}
-
-.main-notes  main::-webkit-scrollbar {
-  width: 10px;
-  background-color: transparent;
-}
-
-.main-notes  main::-webkit-scrollbar-thumb {
-  background-color: var(--gray6);
-  border-radius: 10px;
 }
 
 .main-notes-search {
@@ -67,7 +47,6 @@
   color: var(--gray3);
   margin-right: 10px;
   cursor: pointer;
-  right: 0;
 }
 .main-notes-search input {
   width: 100%;
@@ -79,4 +58,22 @@
 .main-notes-search:focus-within {
   outline: none;
   background-color: var(--gray8);
+}
+
+.main-notes main {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100dvh - 100px - 30px);
+}
+
+.main-notes main::-webkit-scrollbar {
+  width: 10px;
+  background-color: transparent;
+}
+
+.main-notes main::-webkit-scrollbar-thumb {
+  background-color: var(--gray6);
+  border-radius: 10px;
 }

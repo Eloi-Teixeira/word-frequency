@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 
-export const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NWM4MjMyZmEwMGIzZmI1ZGZjZjBkMCIsImlhdCI6MTc1MTA0ODM4OSwiZXhwIjoxNzUxMTM0Nzg5fQ.J72I2xN2e28vy2a6MA63Q2m0TE0kQsbgHM58MZ24XfE';
+export const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NWM4MjMyZmEwMGIzZmI1ZGZjZjBkMCIsImlhdCI6MTc1MTEzNjI2MywiZXhwIjoxNzUxMjIyNjYzfQ.QP7lXYyamu4FzIvYSapSls7zuBmmaPyOI1J1kGbSylE';
 
 interface User {
   id: string;

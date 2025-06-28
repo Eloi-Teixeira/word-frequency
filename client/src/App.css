@@ -20,6 +20,20 @@
   --gray10: #0a0a0a;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--gray6);
+  border-radius: 10px;
+}
+
 ul,
 li {
   list-style: none;
@@ -32,6 +46,8 @@ a {
 
 body {
   background-color: var(--gray9);
+  color: var(--gray1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 button {
@@ -40,6 +56,7 @@ button {
   border: none;
   outline: none;
 }
+
 input {
   background-color: transparent;
   border: none;

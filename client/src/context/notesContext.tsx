@@ -14,7 +14,7 @@ export interface Note {
   pinned: boolean;
   isDeleted: boolean;
   tags: string[];
-  updatedAt: string;
+  updatedAt: Date;
 }
 
 interface NotesContextProps {

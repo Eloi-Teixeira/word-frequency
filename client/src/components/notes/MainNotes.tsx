@@ -16,11 +16,11 @@ export default function MainNotes() {
           <SquarePlus size={24} />
         </button>
       </header>
-      <main>
         <label className='main-notes-search'>
-          <input type="text" placeholder='Pesquisar' />
+          <input type="text" placeholder='Pesquisar' name='search' />
           <Search size={24} />
         </label>
+      <main>
         {notesActive.map((note, i) => <CardNotes note={note} key={i}/>)}</main>
     </section>
   );

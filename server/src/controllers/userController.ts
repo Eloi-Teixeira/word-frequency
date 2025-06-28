@@ -6,7 +6,7 @@ import filterObj from '../utils/filterFields';
 const createAndSendToken = (user: any, res: Response, message: string, codeStatus?: number) => {
   const token = user.generateAuthToken();
   const cookieOptions = {
-    expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+    expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
     httpOnly: true,
   };
 
