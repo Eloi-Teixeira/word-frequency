@@ -3,17 +3,18 @@ import AsideNotes from '../components/notes/AsideNotes';
 import MainNotes from '../components/notes/MainNotes';
 import { EditorNotes } from '../components/notes/EditorNotes';
 import { Note, useNotes } from '../context/notesContext';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function NotesPage() {
   const { selectedNote, notes, setNotes } = useNotes();
 
-  const saveNote = (updatedNote: Note) => {
+  const saveNote = useCallback((updatedNote: Note) => {
     const updatedNotes = notes.map((note) =>
-      note._id === updatedNote._id ? updatedNote : note,
+      note._id === updatedNote._id ? { ...updatedNote } : note,
     );
+    console.log(updatedNote.content);
     setNotes(updatedNotes);
-  };
+  }, [notes]);
 
   return (
     <div className="notes-page">

@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@mdxeditor/editor": "^3.39.1",
+    "@milkdown/crepe": "^7.15.0",
+    "@milkdown/kit": "^7.15.0",
+    "@milkdown/plugin-tooltip": "^7.15.0",
+    "@milkdown/react": "^7.15.0",
+    "@milkdown/theme-nord": "^7.15.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",

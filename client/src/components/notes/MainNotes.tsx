@@ -21,7 +21,7 @@ export default function MainNotes() {
           <Search size={24} />
         </label>
       <main>
-        {notesActive.map((note, i) => <CardNotes note={note} key={i}/>)}</main>
+        {notesActive.map((note) => <CardNotes note={note} key={note._id}/>)}</main>
     </section>
   );
 }

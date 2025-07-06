@@ -1,45 +1,37 @@
-import { EditorContent, EditorProvider, useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
 import { Note } from '../../context/notesContext';
-import Heading from '@tiptap/extension-heading';
-import Placeholder from '@tiptap/extension-placeholder';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import MarkdownIt from 'markdown-it';
-import TurndownService from 'turndown';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  MDXEditor,
+  headingsPlugin,
+  listsPlugin,
+  quotePlugin,
+  thematicBreakPlugin,
+  markdownShortcutPlugin,
+  toolbarPlugin,
+  UndoRedo,
+  BoldItalicUnderlineToggles,
+  codeBlockPlugin,
+  linkPlugin,
+  tablePlugin,
+  MDXEditorMethods, 
+} from '@mdxeditor/editor';
 
 interface EditorNotesProps {
   note: Note;
   saveNote: (note: Note) => void;
 }
 
-const turndownOption: TurndownService.Options = {
-  headingStyle: 'atx',
-  hr: '---',
-  bulletListMarker: '-',
-  codeBlockStyle: 'fenced',
-  fence: '```',
-  emDelimiter: '*',
-  strongDelimiter: '**',
-  linkStyle: 'inlined',
-};
-
 export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
   const [title, setTitle] = useState(note.title);
 
-  const md = useMemo(() => new MarkdownIt(), []);
-  const turndownService = useMemo(
-    () => new TurndownService(turndownOption),
-    [],
-  );
-
-  const content = md.render(note.content) || '';
   const latestNoteRef = useRef<Note>(note);
+  const editorRef = useRef<MDXEditorMethods | null>(null);
+  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     latestNoteRef.current = note;
   }, [note]);
 
-  const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const debouncedSave = useCallback(() => {
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current);
@@ -68,7 +60,6 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current);
     }
-
     const processedTitle = title.length === 0 ? 'Sem título' : title.trim();
     latestNoteRef.current = {
       ...latestNoteRef.current,
@@ -77,59 +68,17 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
     saveNote(latestNoteRef.current);
   };
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit.configure({
-        heading: false,
-      }),
-      Heading.configure({
-        levels: [1, 2, 3],
-        HTMLAttributes: { class: 'notion-heading' },
-      }),
-      Placeholder.configure({
-        placeholder: ({ node }) => {
-          return node.type.name === 'heading' && node.attrs.level === 1
-            ? 'Título da nota…'
-            : 'Comece a escrever...';
-        },
-        includeChildren: true,
-        showOnlyCurrent: false,
-      }),
-    ],
-    content: content,
-    editorProps: {
-      attributes: {
-        class: 'tiptap',
-      },
-    },
-    onUpdate: ({ editor }) => {
-      const newContent = turndownService.turndown(editor.getHTML());
-      latestNoteRef.current.content = newContent;
-
-      debouncedSave();
-    },
-    onBlur: ({ editor }) => {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-      }
-      const newContent = turndownService.turndown(editor.getHTML());
-      latestNoteRef.current.content = newContent;
-      saveNote(latestNoteRef.current);
-    },
-  });
-
   useEffect(() => {
     const handleBeforeUnload = () => {
       if (saveTimerRef.current) {
         clearTimeout(saveTimerRef.current);
       }
       latestNoteRef.current.updatedAt = new Date();
-      if (editor) {
-        latestNoteRef.current.content = turndownService.turndown(
-          editor.getHTML(),
-        );
-      }
       saveNote(latestNoteRef.current);
+      console.log(
+        'Nota salva via beforeunload (MDX Editor):',
+        latestNoteRef.current,
+      );
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -141,15 +90,8 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
   }, [note]);
 
   useEffect(() => {
-    if (editor) {
-      setTitle(note.title);
-      const currentEditorContent = turndownService.turndown(editor.getHTML());
-      const newNoteContent = turndownService.turndown(md.render(note.content));
-      if (currentEditorContent !== newNoteContent) {
-        editor.commands.setContent(content, false);
-      }
-    }
-  }, [note, editor]);
+    setTitle(note.title);
+  }, [note]);
 
   return (
     <article>
@@ -162,7 +104,50 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
           placeholder="Título da nota"
           onBlur={handleTitleBlur}
         />
-        <EditorContent editor={editor} />
+        <MDXEditor
+          key={note._id}
+          ref={editorRef}
+          markdown={note.content}
+          onChange={(newMarkdown) => {
+            latestNoteRef.current = {
+              ...latestNoteRef.current,
+              content: newMarkdown,
+            };
+            debouncedSave();
+          }}
+          // Plugins para as funcionalidades do editor e da barra de ferramentas
+          plugins={[
+            headingsPlugin(),
+            listsPlugin(),
+            quotePlugin(),
+            thematicBreakPlugin(),
+            codeBlockPlugin(),
+            linkPlugin(),
+            // tablePlugin(), // Exemplo de plugin adicional
+
+            markdownShortcutPlugin(), // Permite atalhos de teclado Markdown (ex: ## para h2)
+
+            // Plugin da barra de ferramentas (para botões visíveis)
+            toolbarPlugin({
+              toolbarContents: () => (
+                <>
+                  <UndoRedo /> {/* Botões de desfazer/refazer */}
+                  <BoldItalicUnderlineToggles />{' '}
+                  {/* Botões de negrito, itálico, sublinhado */}
+                  {/* Você pode adicionar mais componentes de toolbar aqui, ex:
+                  <CreateLink />
+                  <BlockTypeSelect />
+                  <ChangeCodeMirrorLanguage />
+                  <InsertImage />
+                  ... e muitos outros que vêm com os plugins
+                  */}
+                </>
+              ),
+            }),
+          ]}
+          placeholder="Comece a escrever sua nota..."
+          // readOnly={false} // Se o editor deve ser apenas leitura
+        />
       </div>
     </article>
   );

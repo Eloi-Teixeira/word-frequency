@@ -40,7 +40,7 @@ userSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { id: this.id },
     process.env.JWT_SECRET || 'defaultSecret',
-    { expiresIn: '24h' },
+    { expiresIn: '72h' },
   );
   return token;
 };
