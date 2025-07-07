@@ -1,0 +1,45 @@
+import { Note } from '../context/notesContext';
+import api from './api';
+
+interface APIResponse<T> {
+  success: boolean;
+  message?: string;
+  data?: T;
+}
+
+interface OptionalNotes extends Partial<Note> {}
+
+export const deleteNote = async (
+  noteId: string,
+): Promise<APIResponse<null>> => {
+  const response = await api.delete(`/notes/${noteId}`);
+  return response.data;
+};
+
+export const createNote = async (
+  title: string,
+  content: string,
+): Promise<APIResponse<Note>> => {
+  const response = await api.post('/notes', { title, content });
+  return response.data;
+};
+
+export const updateNote = async (note: OptionalNotes): Promise<APIResponse<Note>> => {
+  const response = await api.patch(`/notes/${note._id}`, note);
+  return response.data;
+};
+
+export const getAllNotes = async (): Promise<APIResponse<Note[]>> => {
+  const response = await api.get('/notes');
+  return response.data;
+};
+
+export const restoreNote = async (noteId: string): Promise<APIResponse<Note>> => {
+  const response = await api.patch(`/notes/restore/${noteId}`);
+  return response.data;
+};
+
+export const deletePermanentNote = async (noteId: string): Promise<APIResponse<Note>> => {
+  const response = await api.delete(`/notes/permanent/${noteId}`);
+  return response.data;
+};

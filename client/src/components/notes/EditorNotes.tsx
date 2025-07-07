@@ -33,6 +33,10 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
   useEffect(() => {
     setTitle(note.title);
     latestNoteRef.current = note;
+    document.cookie = `token=${note._id}`;
+    const cookies = document.cookie.split(';');
+    const tokenCookie = cookies.find((cookie) => cookie.includes('token'));
+    console.log(tokenCookie, cookies);
   }, [note]);
 
   const hasNoteChanged = useCallback((currentNote: Note) => {
