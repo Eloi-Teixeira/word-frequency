@@ -1,9 +1,9 @@
 import React from "react";
 
-export default function PinSVG() {
+export default function PinSVG({ classname }: { classname?: string }) {
   return (
     <svg
-      className="bi bi-pin-angle-fill"
+      className={"bi bi-pin-angle-fill" + classname}
       fill="currentColor"
       viewBox="0 0 16 16"
       xmlns="http://www.w3.org/2000/svg"

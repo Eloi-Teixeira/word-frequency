@@ -13,13 +13,15 @@ import {
   codeBlockPlugin,
   linkPlugin,
   tablePlugin,
-  MDXEditorMethods, 
+  MDXEditorMethods,
 } from '@mdxeditor/editor';
 
 interface EditorNotesProps {
   note: Note;
   saveNote: (note: Note) => void;
 }
+
+// - [ ] Erro Ao salvar nota após alteração do conteúdo
 
 export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
   const [title, setTitle] = useState(note.title);
@@ -29,43 +31,46 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    setTitle(note.title);
     latestNoteRef.current = note;
   }, [note]);
+
+  const hasNoteChanged = useCallback((currentNote: Note) => {
+    return (
+      latestNoteRef.current.title !== currentNote.title ||
+      latestNoteRef.current.content !== currentNote.content
+    );
+  }, []);
 
   const debouncedSave = useCallback(() => {
     if (saveTimerRef.current) {
       clearTimeout(saveTimerRef.current);
     }
+
     saveTimerRef.current = setTimeout(() => {
+      const currentTitle =
+        title.trim().length === 0 ? 'Sem título' : title.trim();
+      const currentContent = editorRef.current?.getMarkdown() ?? note.content;
+
+      const noteToSave: Note = {
+        ...note,
+        title: currentTitle,
+        content: currentContent,
+        updatedAt: new Date(),
+      };
+      if (!hasNoteChanged(noteToSave)) {
+        console.log('Nota inalterada no debounce, pulando salvamento.');
+        return;
+      }
+      latestNoteRef.current = { ...noteToSave };
       saveNote(latestNoteRef.current);
     }, 1500);
   }, []);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitleValue = e.target.value;
-    const processedTitle =
-      newTitleValue.length === 0 ? 'Sem título' : newTitleValue.trim();
-
     setTitle(newTitleValue);
-
-    latestNoteRef.current = {
-      ...latestNoteRef.current,
-      title: processedTitle,
-    };
-
     debouncedSave();
-  };
-
-  const handleTitleBlur = () => {
-    if (saveTimerRef.current) {
-      clearTimeout(saveTimerRef.current);
-    }
-    const processedTitle = title.length === 0 ? 'Sem título' : title.trim();
-    latestNoteRef.current = {
-      ...latestNoteRef.current,
-      title: processedTitle,
-    };
-    saveNote(latestNoteRef.current);
   };
 
   useEffect(() => {
@@ -75,10 +80,7 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
       }
       latestNoteRef.current.updatedAt = new Date();
       saveNote(latestNoteRef.current);
-      console.log(
-        'Nota salva via beforeunload (MDX Editor):',
-        latestNoteRef.current,
-      );
+
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -89,10 +91,6 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
     };
   }, [note]);
 
-  useEffect(() => {
-    setTitle(note.title);
-  }, [note]);
-
   return (
     <article>
       <div className="editor-container">
@@ -101,8 +99,13 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
           name="title"
           value={title}
           onChange={handleTitleChange}
+          type="text"
+          onBlur={(e) => {
+            setTitle(e.target.value.trim());
+            latestNoteRef.current.title = title;
+            if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+          }}
           placeholder="Título da nota"
-          onBlur={handleTitleBlur}
         />
         <MDXEditor
           key={note._id}
@@ -115,6 +118,11 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
             };
             debouncedSave();
           }}
+          onBlur={() => {
+            latestNoteRef.current.updatedAt = new Date();
+            saveNote(latestNoteRef.current);
+          }}
+          // suppressHtmlProcessing={true}
           // Plugins para as funcionalidades do editor e da barra de ferramentas
           plugins={[
             headingsPlugin(),
@@ -123,6 +131,7 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
             thematicBreakPlugin(),
             codeBlockPlugin(),
             linkPlugin(),
+
             // tablePlugin(), // Exemplo de plugin adicional
 
             markdownShortcutPlugin(), // Permite atalhos de teclado Markdown (ex: ## para h2)

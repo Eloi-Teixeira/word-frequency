@@ -12,7 +12,6 @@ export default function NotesPage() {
     const updatedNotes = notes.map((note) =>
       note._id === updatedNote._id ? { ...updatedNote } : note,
     );
-    console.log(updatedNote.content);
     setNotes(updatedNotes);
   }, [notes]);
 

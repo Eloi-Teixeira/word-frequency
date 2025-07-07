@@ -15,6 +15,7 @@ export interface Note {
   isDeleted: boolean;
   tags: string[];
   updatedAt: Date;
+  createdAt: Date;
 }
 
 interface NotesContextProps {
