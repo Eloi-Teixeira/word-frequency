@@ -69,7 +69,16 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitleValue = e.target.value;
+    const processedTitle =
+      newTitleValue.length === 0 ? 'Sem título' : newTitleValue.trim();
+
     setTitle(newTitleValue);
+
+    latestNoteRef.current = {
+      ...latestNoteRef.current,
+      title: processedTitle,
+    };
+
     debouncedSave();
   };
 

@@ -35,6 +35,15 @@
 }
 
 .note-card-actions button {
+  opacity: 0;
+}
+
+.note-card-actions .pinned,
+.note-card:hover .note-card-actions button {
+  opacity: 1;
+}
+
+.note-card-actions button {
   padding: 0.5rem;
 }
 
@@ -69,6 +78,6 @@
 
 .note-card .date {
   font-size: 0.8rem;
-  color: var(--gray3);
+  color: var(--gray4);
   margin-bottom: 0.5rem;
 }

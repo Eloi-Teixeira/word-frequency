@@ -1,22 +1,14 @@
-import TurndownService from 'turndown';
 import { Note, useNotes } from '../../context/notesContext';
 import PinSVG from '../svgs/PinSVG';
 import { Trash } from 'lucide-react';
 import { useState } from 'react';
 
 export default function CardNotes({ note }: { note: Note }) {
-  const { setSelectedNote, setNotes } = useNotes();
+  const { setSelectedNote } = useNotes();
   const [isPinned, setIsPinned] = useState(note.pinned);
-  const turndownService = new TurndownService();
 
   const title =
     note.title.length > 20 ? note.title.slice(0, 20) + '...' : note.title;
-  let description = turndownService.turndown(note.content);
-  description = description.replace(/[^\p{L}\-\p{N}\s]/gu, '').trim();
-  description =
-    description.length > 50
-      ? description.slice(0, 50).trim() + '...'
-      : description;
   const date = new Date(note.updatedAt || note.createdAt).toLocaleDateString(
     'pt-BR',
     {

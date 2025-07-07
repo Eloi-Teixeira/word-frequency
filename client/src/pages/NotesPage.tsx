@@ -9,10 +9,10 @@ export default function NotesPage() {
   const { selectedNote, notes, setNotes } = useNotes();
 
   const saveNote = useCallback((updatedNote: Note) => {
-    const updatedNotes = notes.map((note) =>
-      note._id === updatedNote._id ? { ...updatedNote } : note,
-    );
-    setNotes(updatedNotes);
+    // const updatedNotes = notes.map((note) =>
+    //   note._id === updatedNote._id ? { ...updatedNote } : note,
+    // );
+    // setNotes(updatedNotes);
   }, [notes]);
 
   return (
