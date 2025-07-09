@@ -6,6 +6,7 @@ import {
   useEffect,
 } from 'react';
 import { token, useUser } from './userContext';
+import { getAllNotes } from '../services/notesServices';
 
 export interface Note {
   _id: string;
@@ -29,19 +30,17 @@ const NotesContext = createContext<NotesContextProps | null>(null);
 
 const getNotesFromServer = async () => {
   try {
-    const response = await fetch(`http://localhost:8000/api/notes/`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (!response.ok) {
-      console.log(response)
-      throw new Error('Erro ao obter notas do servidor');
+    const response = await getAllNotes();
+    if (!response.success) {
+      console.error('Erro ao obter notas do servidor:', response.message);
+      return [];
     }
-    const data = (await response.json()).data as Note[];
+    const data = response.data?.map((note: Note) => ({
+      ...note,
+      updatedAt: new Date(note.updatedAt),
+      createdAt: new Date(note.createdAt),
+    })) as Note[];
+    console.log(data);
     return data;
   } catch (error) {
     console.error('Erro ao obter notas do servidor:', error);
@@ -65,7 +64,9 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
   }, [user]);
 
   return (
-    <NotesContext.Provider value={{ notes, setNotes, selectedNote, setSelectedNote }}>
+    <NotesContext.Provider
+      value={{ notes, setNotes, selectedNote, setSelectedNote }}
+    >
       {children}
     </NotesContext.Provider>
   );

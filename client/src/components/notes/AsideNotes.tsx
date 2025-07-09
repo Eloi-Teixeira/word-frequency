@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNotes } from '../../context/notesContext';
 import { Link, NavLink } from 'react-router-dom';
 import {
@@ -10,33 +10,44 @@ import {
   Trash,
 } from 'lucide-react';
 
-export default function AsideNotes() {
+interface AsideNotesProps {
+  setOpenConfig: React.Dispatch<React.SetStateAction<boolean>>;
+  setTagToSearch: (search: string) => void;
+}
+
+export default function AsideNotes({
+  setOpenConfig,
+  setTagToSearch,
+}: AsideNotesProps) {
   const [tags, setTags] = React.useState<string[]>([]);
   const { notes } = useNotes();
 
-  if (!notes || notes.length === 0) {
-  } else {
-    notes.forEach((note) => {
-      note.tags.forEach((tag) => {
-        if (!tags.includes(tag)) {
-          setTags((prevTags) => [...prevTags, tag]);
-        }
+  useEffect(() => {
+    const activeNotes = notes.filter((note) => !note.isDeleted);
+    if (!activeNotes || activeNotes.length === 0) {
+    } else {
+      activeNotes.forEach((note) => {
+        note.tags.forEach((tag) => {
+          if (!tags.includes(tag)) {
+            setTags((prevTags) => [...prevTags, tag]);
+          }
+        });
       });
-    });
-  }
+    }
+  }, [notes]);
 
   return (
     <aside className="aside-notes">
       <div>
         <ul>
           <li>
-            <NavLink to={'/notes'} end>
+            <NavLink to={'/notes'} end onClick={() => setTagToSearch('')}>
               <StickyNote size={16} />
               Todas as notas
             </NavLink>
           </li>
-          <li>
-            <Link to={'/notes/settings'}>
+          <li onClick={() => setOpenConfig(true)}>
+            <Link to={'/notes'}>
               <Settings size={16} />
               Configurações
             </Link>
@@ -69,7 +80,12 @@ export default function AsideNotes() {
           {tags.length !== 0 ? (
             tags.map((tag, i) =>
               i < 9 ? (
-                <Link to={`/notes/${tag}`} className="tag" key={tag}>
+                <Link
+                  to={`/notes`}
+                  className="tag"
+                  key={tag}
+                  onClick={() => setTagToSearch(`#${tag}`)}
+                >
                   <Tag size={16} /> {tag}
                 </Link>
               ) : null,

@@ -8,6 +8,7 @@ const createAndSendToken = (user: any, res: Response, message: string, codeStatu
   const cookieOptions = {
     expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
     httpOnly: true,
+    secure: true
   };
 
   user.password = undefined;

@@ -21,3 +21,8 @@ export const updateUser = async (user: User): Promise<User> => {
   const response = await api.patch<User>(`/users/${user._id}`, user);
   return response.data;
 }
+
+export const updateConfig = async (config: User['configuration']) => {
+  const response = await api.patch<User>(`/users/config/`, config);
+  return response.data;
+}

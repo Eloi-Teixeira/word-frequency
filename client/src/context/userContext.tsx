@@ -1,11 +1,20 @@
 import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 
-export const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NWM4MjMyZmEwMGIzZmI1ZGZjZjBkMCIsImlhdCI6MTc1MTgxNjcxNiwiZXhwIjoxNzUyMDc1OTE2fQ.xku8It9IgxqETWWISawGMcGgBFpCa9m-5rtoqiRYbGA';
+export const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NWM4MjMyZmEwMGIzZmI1ZGZjZjBkMCIsImlhdCI6MTc1MjA3NzIzOSwiZXhwIjoxNzUyMzM2NDM5fQ.GYYBcvYMYx41hJ_5_Uki45VkzyvN9aQClJMuQSTybuk';
 
 export interface User {
   _id: string;
   name: string;
   email: string;
+  configuration: {
+    theme: string;
+    language: string;
+    fontSize: string;
+    fontFamily: string;
+    highlightColor: string;
+    boldHighlightColor: string;
+    hasBoldHighlightColor: boolean;
+  }
 }
 
 interface UserContextProps {

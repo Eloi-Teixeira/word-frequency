@@ -28,6 +28,16 @@ const userSchema = new Schema({
   passwordChangedAt: { type: Date, default: null },
   passwordResetToken: { type: String, default: null },
   passwordResetExpires: { type: Date, default: null },
+  configuration: {
+    type: {
+      theme: { type: String, enum: ['light', 'dark'], default: 'light' },
+      language: { type: String, default: 'pt-BR' },
+      fontSize: { type: String, default: '16px' },
+      fontFamily: { type: String, default: 'Arial' },
+      highlightColor: { type: String, default: '#fb0' },
+      boldHighlightColor: { type: String, default: '#fb0' },
+    },
+  },
 });
 
 userSchema.pre('save', async function (next) {

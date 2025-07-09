@@ -4,7 +4,7 @@ import { Trash } from 'lucide-react';
 import { useState } from 'react';
 
 export default function CardNotes({ note }: { note: Note }) {
-  const { setSelectedNote } = useNotes();
+  const { selectedNote, setSelectedNote, setNotes, notes } = useNotes();
   const [isPinned, setIsPinned] = useState(note.pinned);
 
   const title =
@@ -27,17 +27,34 @@ export default function CardNotes({ note }: { note: Note }) {
     e.currentTarget.classList.add('active');
   };
 
+  const updateNotePinStatus = (
+    notes: Note[],
+    noteId: string,
+    pinned: boolean,
+  ): Note[] => {
+    return notes.map((n) => (n._id === noteId ? { ...n, pinned } : n));
+  };
+
+  const handleDelete = () => {
+    const updatedNotes = notes.filter((n) => n._id !== note._id);
+    setNotes(updatedNotes);
+    if (selectedNote?._id === note._id) {
+      setSelectedNote(null);
+    }
+  };
+
   const handlePinned = () => {
     const newPinned = !isPinned;
     setIsPinned(newPinned);
     note.pinned = newPinned;
+    setNotes(updateNotePinStatus(notes, note._id, newPinned));
   };
 
   return (
     <div className="note-card" onClick={(e) => handleClick(e)}>
       <h2>{title}</h2>
       <div className="note-card-actions">
-        <button className="trash">
+        <button className="trash" onClick={handleDelete}>
           <Trash />
         </button>
         <button
@@ -47,7 +64,7 @@ export default function CardNotes({ note }: { note: Note }) {
           <PinSVG />
         </button>
       </div>
-        <span className="date">{date}</span>
+      <span className="date">{date}</span>
     </div>
   );
 }

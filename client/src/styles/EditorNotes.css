@@ -93,17 +93,16 @@ article {
 .mdxeditor ._contentEditable_sects_380 ul,
 .mdxeditor ._contentEditable_sects_380 ol {
   list-style: none;
-  padding-left: 1.5em; /* Garante o "indexamento" para a direita */
+  padding-left: 1.5em;
   margin: 0;
 }
 
 .mdxeditor ._contentEditable_sects_380 li {
   position: relative;
-  padding-left: 1.2em; /* Espaço para o marcador personalizado */
+  padding-left: 1.2em;
   margin: 0.2em 0;
 }
 
-/* Nível 1 - Círculo preenchido */
 .mdxeditor ._contentEditable_sects_380 ul li::before,
 .mdxeditor ._contentEditable_sects_380 ol li::before {
   content: '';

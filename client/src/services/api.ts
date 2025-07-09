@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { token } from '../context/userContext';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'http://localhost:8000/api',
+  withCredentials: true,
   timeout: 15000,
   headers: {
     'Content-Type': 'application/json',
@@ -10,12 +12,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const cookies = document.cookie.split(';');
-    const tokenCookie = cookies.find((cookie) => cookie.includes('token'));
-    if (tokenCookie) {
-      const token = tokenCookie.split('=')[1];
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    token && (config.headers.Authorization = `Bearer ${token}`);
     return config;
   },
   (error) => Promise.reject(error),
