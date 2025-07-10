@@ -28,6 +28,31 @@ article {
   display: block;
 }
 
+.editor-container .tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray6);
+}
+
+.editor-container .tags-container .tag {
+  color: var(--yellow);
+  background-color: var(--black);
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  cursor: pointer;
+}
+
+.editor-container .tags-container .tag svg {
+  width: 16px;
+  margin-right: .25rem;
+}
+
+
 .mdxeditor-toolbar {
   display: flex;
   justify-content: center;
@@ -151,6 +176,11 @@ article {
   border: 1px solid var(--yellow);
   border-radius: 50%;
   transform: translateY(4px);
+}
+
+.mdxeditor ._contentEditable_sects_380 ul li:has(li)::before,
+.mdxeditor ._contentEditable_sects_380 ol li:has(li)::before {
+  display: none;
 }
 
 .mdxeditor ._contentEditable_sects_380 pre {

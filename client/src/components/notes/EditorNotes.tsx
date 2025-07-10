@@ -15,6 +15,7 @@ import {
   tablePlugin,
   MDXEditorMethods,
 } from '@mdxeditor/editor';
+import { Tag } from 'lucide-react';
 
 interface EditorNotesProps {
   note: Note;
@@ -23,6 +24,7 @@ interface EditorNotesProps {
 }
 
 // - [ ] Erro Ao salvar nota após alteração do conteúdo
+// - [ ] Erro ao adicionar nota vazia, criação de um editor paralelo
 
 export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
   const [title, setTitle] = useState(note.title);
@@ -90,7 +92,6 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
       }
       latestNoteRef.current.updatedAt = new Date();
       saveNote(latestNoteRef.current);
-
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -117,6 +118,9 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
           }}
           placeholder="Título da nota"
         />
+        <div className='tags-container'>{note.tags.map(n => {
+          return <span className='tag'><Tag />{n}</span>
+        })}</div>
         <MDXEditor
           key={note._id}
           ref={editorRef}
@@ -164,7 +168,7 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
               ),
             }),
           ]}
-          placeholder="Comece a escrever sua nota..."
+          // placeholder="Comece a escrever sua nota..."
           // readOnly={false} // Se o editor deve ser apenas leitura
         />
       </div>

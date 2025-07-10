@@ -2,7 +2,7 @@ import { MenuIcon, SquarePlus } from 'lucide-react';
 import { Note, useNotes } from '../../context/notesContext';
 import CardNotes from './CardNotes';
 import { useEffect, useState } from 'react';
-import { createNote } from '../../services/notesServices';
+import { useCreateNote } from '../../hook/useCreateNote';
 
 interface MainNotesProps {
   search: string;
@@ -12,13 +12,20 @@ interface MainNotesProps {
 export default function MainNotes({ search, setSearch }: MainNotesProps) {
   const { notes } = useNotes();
   const [notesFiltered, setNotesFiltered] = useState<Note[]>([]);
+  const { handleCreateNote, isCreating } = useCreateNote();
+
+  const onCreateNote = async () => {
+    try {
+      await handleCreateNote();
+    } catch (error) {
+      // Mostrar toast de erro ou notificação
+      console.error('Erro ao criar nota:', error);
+    }
+  };
 
   useEffect(() => {
     const notesActive = notes.filter((note) => !note.isDeleted);
-    let sorted = notesActive.sort(
-      (a, b) => Number(b.pinned) - Number(a.pinned),
-    );
-    sorted = sorted.filter((note) => {
+    let sorted = notesActive.filter((note) => {
       if (search === '') return true;
       if (search.slice(0, 1) === '#') {
         if (search.length > 1) {
@@ -33,6 +40,11 @@ export default function MainNotes({ search, setSearch }: MainNotesProps) {
       const searchTerm = search.toLowerCase();
       return note.title.toLowerCase().includes(searchTerm);
     });
+    sorted = sorted.sort((a, b) => {
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+
+    sorted = sorted.sort((a, b) => Number(b.pinned) - Number(a.pinned));
     setNotesFiltered(sorted);
   }, [notes, search]);
 
@@ -43,8 +55,8 @@ export default function MainNotes({ search, setSearch }: MainNotesProps) {
           <MenuIcon size={24} />
         </button>
         <h2>Todas as notas</h2>
-        <button>
-          <SquarePlus size={24}/>
+        <button onClick={onCreateNote} disabled={isCreating}>
+          <SquarePlus size={24} />
         </button>
       </header>
       <label className="main-notes-search">

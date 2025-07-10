@@ -15,15 +15,16 @@ export interface Note {
   pinned: boolean;
   isDeleted: boolean;
   tags: string[];
-  updatedAt: Date;
-  createdAt: Date;
+  updatedAt: string | Date;
+  createdAt: string | Date;
+  isTemporary?: boolean;
 }
 
 interface NotesContextProps {
+  setNotes: React.Dispatch<React.SetStateAction<Note[]>>;
   notes: Note[];
-  setNotes: (notes: Note[]) => void;
   selectedNote: Note | null;
-  setSelectedNote: (note: Note | null) => void;
+  setSelectedNote: React.Dispatch<React.SetStateAction<Note | null>>;
 }
 
 const NotesContext = createContext<NotesContextProps | null>(null);
@@ -37,8 +38,6 @@ const getNotesFromServer = async () => {
     }
     const data = response.data?.map((note: Note) => ({
       ...note,
-      updatedAt: new Date(note.updatedAt),
-      createdAt: new Date(note.createdAt),
     })) as Note[];
     console.log(data);
     return data;

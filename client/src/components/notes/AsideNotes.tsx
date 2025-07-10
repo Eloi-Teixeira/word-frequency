@@ -24,16 +24,10 @@ export default function AsideNotes({
 
   useEffect(() => {
     const activeNotes = notes.filter((note) => !note.isDeleted);
-    if (!activeNotes || activeNotes.length === 0) {
-    } else {
-      activeNotes.forEach((note) => {
-        note.tags.forEach((tag) => {
-          if (!tags.includes(tag)) {
-            setTags((prevTags) => [...prevTags, tag]);
-          }
-        });
-      });
-    }
+    const allTags = Array.from(
+      new Set(activeNotes.flatMap((note) => note.tags)),
+    );
+    setTags(allTags);
   }, [notes]);
 
   return (
@@ -74,20 +68,19 @@ export default function AsideNotes({
       </div>
       <div>
         <div className="tags-header">
-          <h2>Tags</h2> <button>Edit</button>
+          <h2>Tags</h2>
         </div>
         <div className="tags-container">
           {tags.length !== 0 ? (
             tags.map((tag, i) =>
               i < 9 ? (
-                <Link
-                  to={`/notes`}
+                <span
                   className="tag"
                   key={tag}
                   onClick={() => setTagToSearch(`#${tag}`)}
                 >
                   <Tag size={16} /> {tag}
-                </Link>
+                </span>
               ) : null,
             )
           ) : (

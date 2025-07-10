@@ -1,7 +1,7 @@
 import { Note, useNotes } from '../../context/notesContext';
 import PinSVG from '../svgs/PinSVG';
 import { Trash } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CardNotes({ note }: { note: Note }) {
   const { selectedNote, setSelectedNote, setNotes, notes } = useNotes();
@@ -36,8 +36,7 @@ export default function CardNotes({ note }: { note: Note }) {
   };
 
   const handleDelete = () => {
-    const updatedNotes = notes.filter((n) => n._id !== note._id);
-    setNotes(updatedNotes);
+    setNotes((n) => n.filter((n) => n._id !== note._id));
     if (selectedNote?._id === note._id) {
       setSelectedNote(null);
     }
@@ -50,8 +49,19 @@ export default function CardNotes({ note }: { note: Note }) {
     setNotes(updateNotePinStatus(notes, note._id, newPinned));
   };
 
+  useEffect(() => {
+    const allCards = document.querySelectorAll('.note-card');
+    allCards.forEach((card) => card.classList.remove('active'));
+    allCards.forEach((card) => {
+      if (selectedNote && card.id === selectedNote._id) {
+        card.classList.add('active');
+        card.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }, [notes]);
+
   return (
-    <div className="note-card" onClick={(e) => handleClick(e)}>
+    <div className="note-card" onClick={(e) => handleClick(e)} id={note._id}>
       <h2>{title}</h2>
       <div className="note-card-actions">
         <button className="trash" onClick={handleDelete}>
