@@ -3,6 +3,7 @@ import api from './api';
 
 interface APIResponse<T> {
   success: boolean;
+  deletedCount?: number;
   message?: string;
   data?: T;
 }
@@ -24,7 +25,9 @@ export const createNote = async (
   return response.data;
 };
 
-export const updateNote = async (note: OptionalNotes): Promise<APIResponse<Note>> => {
+export const updateNote = async (
+  note: OptionalNotes,
+): Promise<APIResponse<Note>> => {
   const response = await api.patch(`/notes/${note._id}`, note);
   return response.data;
 };
@@ -34,12 +37,16 @@ export const getAllNotes = async (): Promise<APIResponse<Note[]>> => {
   return response.data;
 };
 
-export const restoreNote = async (noteId: string): Promise<APIResponse<Note>> => {
+export const restoreNote = async (
+  noteId: string,
+): Promise<APIResponse<Note>> => {
   const response = await api.patch(`/notes/restore/${noteId}`);
   return response.data;
 };
 
-export const deletePermanentNote = async (noteId: string): Promise<APIResponse<Note>> => {
-  const response = await api.delete(`/notes/permanent/${noteId}`);
+export const deletePermanentNote = async (
+  notes: string[],
+): Promise<APIResponse<Note[]>> => {
+  const response = await api.delete(`/notes/permanent`, { data: { notes } });
   return response.data;
 };

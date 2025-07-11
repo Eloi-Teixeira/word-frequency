@@ -77,3 +77,40 @@
   background-color: var(--gray6);
   border-radius: 10px;
 }
+
+/* Trash */
+
+.main-notes main input {
+  display: none;
+}
+
+.main-notes main label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: .75rem;
+  margin: .75rem;
+  background-color: var(--gray7);
+}
+
+.main-notes main label .note-card {
+  padding: 0;
+  margin: 0;
+}
+
+.main-notes main label::before {
+  display: flex;
+  content: '';
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--gray3);
+  border-radius: .3rem;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.main-notes main label:has(input:checked)::before {
+  background-color: var(--yellow);
+  border-color: var(--yellow);
+}

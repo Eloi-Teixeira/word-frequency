@@ -79,5 +79,6 @@
 .note-card .date {
   font-size: 0.8rem;
   color: var(--gray4);
-  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
 }

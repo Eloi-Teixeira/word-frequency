@@ -5,6 +5,7 @@ import { EditorNotes } from '../components/notes/EditorNotes';
 import { Note, useNotes } from '../context/notesContext';
 import { useCallback, useEffect, useState } from 'react';
 import { ConfigModal } from '../components/notes/ConfigModal';
+import { TrashNotes } from '../components/notes/TrashNotes';
 
 export default function NotesPage() {
   const { selectedNote, notes, setNotes } = useNotes();
@@ -25,12 +26,22 @@ export default function NotesPage() {
     <div className="notes-page">
       <AsideNotes setOpenConfig={setIsMenuOpen} setTagToSearch={setSearch} />
       <Routes>
-        <Route path="/" element={<MainNotes search={search} setSearch={setSearch} />} />
+        <Route
+          path="/"
+          element={<MainNotes search={search} setSearch={setSearch} />}
+        />
         <Route path="/tags" element={<div>Tags</div>} />
-        <Route path="/trash" element={<div>Lixeira</div>} />
+        <Route
+          path="/trash"
+          element={<TrashNotes search={search} setSearch={setSearch} />}
+        />
       </Routes>
       {selectedNote ? (
-        <EditorNotes note={selectedNote} saveNote={saveNote} setSearch={setSearch} />
+        <EditorNotes
+          note={selectedNote}
+          saveNote={saveNote}
+          setSearch={setSearch}
+        />
       ) : null}
       <ConfigModal isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>

@@ -3,6 +3,7 @@ import Note from '../models/noteModel';
 import catchAsync from '../utils/catchAsync';
 import { AuthRequest } from '../middlewares/authMiddleware';
 import filterFields from '../utils/filterFields';
+import mongoose from 'mongoose';
 
 export const createNote = catchAsync(
   async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -184,17 +185,33 @@ export const deletePermanentNote = catchAsync(
         message: 'Usuário não autorizado',
       });
     }
-    const noteId = req.params.id;
-    const note = await Note.findOneAndDelete({ userId, _id: noteId });
-    if (!note) {
-      return res.status(404).json({
+    const notes = req.body.notes;
+    if (!Array.isArray(notes) || notes.length === 0) {
+      return res.status(400).json({
         success: false,
-        message: 'Nota não encontrada',
+        message: 'Requisição inválida',
       });
     }
+
+    if (notes.every((id) => typeof id !== 'string')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Requisição inválida',
+      });
+    }
+    const objectIds = notes.map((id) => new mongoose.Types.ObjectId(id));
+    const deletedNotes = await Note.deleteMany({
+      _id: { $in: objectIds },
+      userId: new mongoose.Types.ObjectId(userId),
+      isDeleted: true,
+    });
+
+    const newNotes = await Note.find({ userId });
     return res.status(200).json({
       success: true,
-      message: 'Nota deletada com sucesso',
+      deletedCount: deletedNotes.deletedCount,
+      message: `${deletedNotes.deletedCount} notas deletadas.`,
+      data: newNotes,
     });
   },
 );
@@ -254,11 +271,11 @@ export const getAllTags = catchAsync(
       }
     });
 
-    const uniqueTags = [...new Set(tags)]; 
+    const uniqueTags = [...new Set(tags)];
     return res.status(200).json({
       success: true,
       message: 'Tags encontradas com sucesso',
       data: uniqueTags,
-    })
+    });
   },
 );

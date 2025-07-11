@@ -36,6 +36,8 @@ const userSchema = new Schema({
       fontFamily: { type: String, default: 'Arial' },
       highlightColor: { type: String, default: '#fb0' },
       boldHighlightColor: { type: String, default: '#fb0' },
+      autoSave: { type: Boolean, default: true },
+      autoSaveInterval: { type: Number, default: 5 },
     },
   },
 });

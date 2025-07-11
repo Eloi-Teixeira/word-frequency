@@ -6,7 +6,7 @@ import { useCreateNote } from '../../hook/useCreateNote';
 
 interface MainNotesProps {
   search: string;
-  setSearch: (search: string) => void;
+  setSearch: React.Dispatch<React.SetStateAction<string>>
 }
 
 export default function MainNotes({ search, setSearch }: MainNotesProps) {

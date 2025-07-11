@@ -118,9 +118,16 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
           }}
           placeholder="Título da nota"
         />
-        <div className='tags-container'>{note.tags.map(n => {
-          return <span className='tag'><Tag />{n}</span>
-        })}</div>
+        <div className="tags-container">
+          {note.tags.map((n) => {
+            return (
+              <span className="tag">
+                <Tag />
+                {n}
+              </span>
+            );
+          })}
+        </div>
         <MDXEditor
           key={note._id}
           ref={editorRef}
@@ -151,9 +158,13 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
             markdownShortcutPlugin(), // Permite atalhos de teclado Markdown (ex: ## para h2)
 
             // Plugin da barra de ferramentas (para botões visíveis)
+            
             toolbarPlugin({
-              toolbarContents: () => (
-                <>
+              toolbarContents: () => {
+                if (note.isDeleted) {
+                  return <>Não editavel</>;
+                } 
+                return <>
                   <UndoRedo /> {/* Botões de desfazer/refazer */}
                   <BoldItalicUnderlineToggles />{' '}
                   {/* Botões de negrito, itálico, sublinhado */}
@@ -164,12 +175,12 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
                   <InsertImage />
                   ... e muitos outros que vêm com os plugins
                   */}
-                </>
-              ),
+                </>;
+              },
             }),
           ]}
           // placeholder="Comece a escrever sua nota..."
-          // readOnly={false} // Se o editor deve ser apenas leitura
+          readOnly={note.isDeleted} // Se o editor deve ser apenas leitura
         />
       </div>
     </article>
