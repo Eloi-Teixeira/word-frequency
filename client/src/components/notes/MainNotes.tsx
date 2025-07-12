@@ -2,26 +2,17 @@ import { MenuIcon, SquarePlus } from 'lucide-react';
 import { Note, useNotes } from '../../context/notesContext';
 import CardNotes from './CardNotes';
 import { useEffect, useState } from 'react';
-import { useCreateNote } from '../../hook/useCreateNote';
+import { useManageNote } from '../../hook/useManageNote';
 
 interface MainNotesProps {
   search: string;
-  setSearch: React.Dispatch<React.SetStateAction<string>>
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function MainNotes({ search, setSearch }: MainNotesProps) {
   const { notes } = useNotes();
   const [notesFiltered, setNotesFiltered] = useState<Note[]>([]);
-  const { handleCreateNote, isCreating } = useCreateNote();
-
-  const onCreateNote = async () => {
-    try {
-      await handleCreateNote();
-    } catch (error) {
-      // Mostrar toast de erro ou notificação
-      console.error('Erro ao criar nota:', error);
-    }
-  };
+  const { onCreateNote, isLoading, Feedback } = useManageNote();
 
   useEffect(() => {
     const notesActive = notes.filter((note) => !note.isDeleted);
@@ -55,7 +46,7 @@ export default function MainNotes({ search, setSearch }: MainNotesProps) {
           <MenuIcon size={24} />
         </button>
         <h2>Todas as notas</h2>
-        <button onClick={onCreateNote} disabled={isCreating}>
+        <button onClick={onCreateNote} disabled={isLoading}>
           <SquarePlus size={24} />
         </button>
       </header>
@@ -73,6 +64,7 @@ export default function MainNotes({ search, setSearch }: MainNotesProps) {
           <CardNotes note={note} key={note._id} />
         ))}
       </main>
+      {Feedback}
     </section>
   );
 }

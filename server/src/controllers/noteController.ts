@@ -158,14 +158,30 @@ export const deleteTemporaryNote = catchAsync(
         message: 'Usuário não autorizado',
       });
     }
-    const noteId = req.params.id;
-    const note = await Note.findOne({ userId, _id: noteId, isDeleted: false });
+    const notes = req.body.notes;
+    if (!Array.isArray(notes) || notes.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Requisição inválida',
+      });
+    }
+
+    if (notes.every((id) => typeof id !== 'string')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Requisição inválida',
+      });
+    }
+    const objectIds = notes.map((id) => new mongoose.Types.ObjectId(id));
+    const note = await Note.findOne({ userId, _id: {$in: objectIds}, isDeleted: false });
+
     if (!note) {
       return res.status(404).json({
         success: false,
         message: 'Nota não encontrada',
       });
     }
+    
     note.isDeleted = true;
     await note.save();
     return res.status(200).json({
@@ -219,7 +235,6 @@ export const deletePermanentNote = catchAsync(
 export const restoreNote = catchAsync(
   async (req: AuthRequest, res: Response, next: NextFunction) => {
     const userId = req.user?.id;
-    const noteId = req.params.id;
 
     if (!userId) {
       return res
@@ -227,13 +242,30 @@ export const restoreNote = catchAsync(
         .json({ success: false, message: 'Usuário não autorizado' });
     }
 
-    const note = await Note.findOneAndUpdate(
-      { _id: noteId, userId, isDeleted: true },
+    const notes = req.body.notes;
+    if (!Array.isArray(notes) || notes.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Requisição inválida',
+      });
+    }
+
+    if (notes.every((id) => typeof id !== 'string')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Requisição inválida',
+      });
+    }
+
+    const objectIds = notes.map((id) => new mongoose.Types.ObjectId(id));
+
+    const noteRestored = await Note.findOneAndUpdate(
+      { _id: { $in: objectIds }, userId, isDeleted: true },
       { isDeleted: false, deletedAt: null },
       { new: true },
     );
 
-    if (!note) {
+    if (!noteRestored) {
       return res.status(404).json({
         success: false,
         message: 'Nota não encontrada ou não está na lixeira',
@@ -243,7 +275,7 @@ export const restoreNote = catchAsync(
     return res.status(200).json({
       success: true,
       message: 'Nota restaurada com sucesso',
-      data: note,
+      data: noteRestored,
     });
   },
 );

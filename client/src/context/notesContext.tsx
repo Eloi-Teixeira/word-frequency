@@ -17,6 +17,7 @@ export interface Note {
   tags: string[];
   updatedAt: string | Date;
   createdAt: string | Date;
+  deletedAt: string | Date | null;
   isTemporary?: boolean;
 }
 

@@ -15,13 +15,13 @@ const routers = Router();
 
 routers.route('/tags').get(protect, getAllTags);
 routers.route('/permanent').delete(protect, deletePermanentNote);
-routers.route('/restore/:id').patch(protect, restoreNote);
-routers.route('/').post(protect, createNote).get(protect, getAllNotesByUser);
-
+routers.route('/restore').patch(protect, restoreNote);
 routers
-  .route('/:id')
-  .get(protect, getNote)
-  .patch(protect, updateNote)
+  .route('/')
+  .post(protect, createNote)
+  .get(protect, getAllNotesByUser)
   .delete(protect, deleteTemporaryNote);
+
+routers.route('/:id').get(protect, getNote).patch(protect, updateNote);
 
 export default routers;

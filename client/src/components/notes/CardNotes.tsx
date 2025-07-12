@@ -1,5 +1,5 @@
 import { Note, useNotes } from '../../context/notesContext';
-import { useDeleteNote } from '../../hook/useDeleteNote';
+import { useManageNote } from '../../hook/useManageNote';
 import PinSVG from '../svgs/PinSVG';
 import { Trash } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -17,7 +17,7 @@ export default function CardNotes({
 }: CardNotesProps) {
   const { selectedNote, setSelectedNote, setNotes, notes } = useNotes();
   const [isPinned, setIsPinned] = useState(note.pinned);
-  const { temporaryDeleteNote } = useDeleteNote();
+  const { onDeleteTemporaryNotes } = useManageNote();
 
   const title =
     note.title.length > 20 ? note.title.slice(0, 20) + '...' : note.title;
@@ -48,10 +48,12 @@ export default function CardNotes({
   };
 
   const handleDelete = async () => {
-    await temporaryDeleteNote(note);
+    await onDeleteTemporaryNotes([note]);
     setNotes((ns) =>
       ns.map((n) =>
-        n._id === note._id ? { ...n, isDeleted: true, pinned: false } : n,
+        n._id === note._id
+          ? { ...n, isDeleted: true, pinned: false, deletedAt: new Date() }
+          : n,
       ),
     );
     if (selectedNote?._id === note._id) {
@@ -78,7 +80,7 @@ export default function CardNotes({
         card.scrollIntoView({ behavior: 'smooth' });
       }
     });
-  }, [notes]);
+  }, [notes, selectedNote]);
 
   return (
     <div className="note-card" onClick={(e) => handleClick(e)} id={note._id}>

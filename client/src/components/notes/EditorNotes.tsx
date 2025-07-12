@@ -119,11 +119,11 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
           placeholder="Título da nota"
         />
         <div className="tags-container">
-          {note.tags.map((n) => {
+          {note.tags.map((t, i) => {
             return (
-              <span className="tag">
+              <span className="tag" key={t + i}>
                 <Tag />
-                {n}
+                {t}
               </span>
             );
           })}
@@ -154,32 +154,32 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
             linkPlugin(),
 
             // tablePlugin(), // Exemplo de plugin adicional
-
             markdownShortcutPlugin(), // Permite atalhos de teclado Markdown (ex: ## para h2)
-
             // Plugin da barra de ferramentas (para botões visíveis)
-            
+
             toolbarPlugin({
               toolbarContents: () => {
                 if (note.isDeleted) {
                   return <>Não editavel</>;
-                } 
-                return <>
-                  <UndoRedo /> {/* Botões de desfazer/refazer */}
-                  <BoldItalicUnderlineToggles />{' '}
-                  {/* Botões de negrito, itálico, sublinhado */}
-                  {/* Você pode adicionar mais componentes de toolbar aqui, ex:
+                }
+                return (
+                  <>
+                    <UndoRedo /> {/* Botões de desfazer/refazer */}
+                    <BoldItalicUnderlineToggles />{' '}
+                    {/* Botões de negrito, itálico, sublinhado */}
+                    {/* Você pode adicionar mais componentes de toolbar aqui, ex:
                   <CreateLink />
                   <BlockTypeSelect />
                   <ChangeCodeMirrorLanguage />
                   <InsertImage />
                   ... e muitos outros que vêm com os plugins
                   */}
-                </>;
+                  </>
+                );
               },
             }),
           ]}
-          // placeholder="Comece a escrever sua nota..."
+          placeholder="Comece a escrever sua nota..."
           readOnly={note.isDeleted} // Se o editor deve ser apenas leitura
         />
       </div>

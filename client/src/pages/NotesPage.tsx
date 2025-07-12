@@ -1,16 +1,18 @@
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import AsideNotes from '../components/notes/AsideNotes';
 import MainNotes from '../components/notes/MainNotes';
 import { EditorNotes } from '../components/notes/EditorNotes';
 import { Note, useNotes } from '../context/notesContext';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { ConfigModal } from '../components/notes/ConfigModal';
 import { TrashNotes } from '../components/notes/TrashNotes';
+import { useManageNote } from '../hook/useManageNote';
 
 export default function NotesPage() {
   const { selectedNote, notes, setNotes } = useNotes();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const { onCreateNote, isLoading } = useManageNote();
 
   const saveNote = useCallback(
     (updatedNote: Note) => {
@@ -42,7 +44,16 @@ export default function NotesPage() {
           saveNote={saveNote}
           setSearch={setSearch}
         />
-      ) : null}
+      ) : (
+        <section className="empty-notes">
+          <h1>Está tão vazio aqui...</h1>
+          <p>
+            Selecione uma nota para editar <br />
+            ou <span onClick={onCreateNote}>clique aqui</span> para criar uma
+            nova nota
+          </p>
+        </section>
+      )}
       <ConfigModal isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   );

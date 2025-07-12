@@ -11,9 +11,9 @@ interface APIResponse<T> {
 interface OptionalNotes extends Partial<Note> {}
 
 export const deleteNote = async (
-  noteId: string,
+  notes: string[],
 ): Promise<APIResponse<null>> => {
-  const response = await api.delete(`/notes/${noteId}`);
+  const response = await api.delete(`/notes/`, { data: { notes }});
   return response.data;
 };
 
@@ -38,9 +38,9 @@ export const getAllNotes = async (): Promise<APIResponse<Note[]>> => {
 };
 
 export const restoreNote = async (
-  noteId: string,
+  notes: string[],
 ): Promise<APIResponse<Note>> => {
-  const response = await api.patch(`/notes/restore/${noteId}`);
+  const response = await api.patch(`/notes/restore`, { notes });
   return response.data;
 };
 

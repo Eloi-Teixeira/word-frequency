@@ -53,7 +53,7 @@ export default function AsideNotes({
             </NavLink>
           </li>
           <li>
-            <Link to={'/notes/help'}>
+            <Link to={'/about'}>
               <HelpCircle size={16} />
               Ajuda e Suporte
             </Link>
