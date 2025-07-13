@@ -45,12 +45,11 @@ export default function NotesPage() {
           setSearch={setSearch}
         />
       ) : (
-        <section className="empty-notes">
+        <section className="empty-notes" onClick={onCreateNote}>
           <h1>Está tão vazio aqui...</h1>
           <p>
             Selecione uma nota para editar <br />
-            ou <span onClick={onCreateNote}>clique aqui</span> para criar uma
-            nova nota
+            ou <span>clique aqui</span> para criar uma nova nota
           </p>
         </section>
       )}

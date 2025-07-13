@@ -68,16 +68,16 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
         <button onClick={() => setIsOpenMenu((prev) => !prev)}>
           <MenuIcon size={24} />
         </button>
-        <div>
           {
-            isOpenMenu
+        // <div>
+            // isOpenMenu
             // opção selecionar todos os itens
             // opção deselecionar todos os itens
             // opção de restaurar todos os itens selecionados
             // opção de restaurar todos os itens
             // opção de deletar todos os itens
+        // </div>
           }
-        </div>
         <h2>Todas as notas</h2>
         <button onClick={onDeleteNote} disabled={isLoading}>
           <Trash size={24} />
