@@ -10,13 +10,13 @@ interface TrashNotesProps {
 
 export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
   const [notesFiltered, setNotesFiltered] = useState<Note[]>([]);
-  const [deleteNote, setDeleteNote] = useState<Note[]>([]);
+  const [selectNote, setSelectNote] = useState<Note[]>([]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { notes } = useNotes();
-  const { isLoading, onDeletePermanentlyNotes, Feedback } = useManageNote();
+  const { isLoading, onDeletePermanentlyNotes, Feedback, onRestoreNote } = useManageNote();
 
   const onDeleteNote = async () => {
-    if (deleteNote.length === 0) {
+    if (selectNote.length === 0) {
       window.alert('Selecione uma nota');
       return;
     }
@@ -24,17 +24,51 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
       'Tem certeza que deseja deletar permanentemente essas notas?',
     );
     if (!response) return;
-    onDeletePermanentlyNotes(deleteNote);
+    onDeletePermanentlyNotes(selectNote);
   };
 
   const handleDelete = (note: Note) => {
-    setDeleteNote((prev) => {
+    setSelectNote((prev) => {
       const exists = prev.some((n) => n._id.toString() === note._id.toString());
       if (exists) {
         return prev.filter((n) => n._id.toString() !== note._id.toString());
       }
       return [...prev, note];
     });
+  };
+
+  const selectAll = () => {
+    setSelectNote(notes.filter((note) => note.isDeleted));
+  };
+
+  const unselectAll = () => {
+    setSelectNote([]);
+  };
+
+  const restoreNoteSelected = () => {
+    if (selectNote.length === 0) {
+      window.alert('Selecione uma nota');
+      return;
+    }
+    onRestoreNote(selectNote);
+  };
+
+  const deleteAll = () => {
+    if (selectNote.length === 0) {
+      window.alert('Não há notas na lixeira');
+      return;
+    }
+    selectAll();
+    onDeletePermanentlyNotes(selectNote);
+  };
+
+  const restoreAll = () => {
+    if (notes.length === 0) {
+      window.alert('Não há notas na lixeira');
+      return;
+    }
+    selectAll();
+    onRestoreNote(selectNote);
   };
 
   useEffect(() => {
@@ -68,16 +102,15 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
         <button onClick={() => setIsOpenMenu((prev) => !prev)}>
           <MenuIcon size={24} />
         </button>
-          {
-        // <div>
-            // isOpenMenu
-            // opção selecionar todos os itens
-            // opção deselecionar todos os itens
-            // opção de restaurar todos os itens selecionados
-            // opção de restaurar todos os itens
-            // opção de deletar todos os itens
-        // </div>
-          }
+        {isOpenMenu && (
+          <div className="main-notes-menu">
+            <button onClick={selectAll}>Selecionar todos os itens</button>
+            <button onClick={unselectAll}>Remover seleção</button>
+            <button onClick={restoreNoteSelected}>Restaurar itens selecionados</button>
+            <button onClick={restoreAll}>Restaurar tudo</button>
+            <button onClick={deleteAll}>Apagar tudo na lixeira</button>
+          </div>
+        )}
         <h2>Todas as notas</h2>
         <button onClick={onDeleteNote} disabled={isLoading}>
           <Trash size={24} />
@@ -99,7 +132,7 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
               type="checkbox"
               name={note.title}
               id={note._id}
-              checked={deleteNote.some((n) => n._id === note._id)}
+              checked={selectNote.some((n) => n._id === note._id)}
               onChange={() => handleDelete(note)}
             />
 

@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react';
-import { useNotes, Note } from '../context/notesContext';
+import { useState } from 'react';
+import { Note, useNotes } from '../context/notesContext';
 import {
   createNote,
   deleteNote,
@@ -10,58 +10,30 @@ import { SubmitMessageStatus, useSubmitMessage } from './useMessage';
 import { useNavigate } from 'react-router-dom';
 
 export const useManageNote = () => {
-  const { setNotes, notes, setSelectedNote } = useNotes();
+  const { setNotes, setSelectedNote } = useNotes();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('Erro ao criar nota');
   const [status, setStatus] = useState<SubmitMessageStatus>(null);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState(
+    'Nota criada com sucesso!',
+  );
+
   const navigate = useNavigate();
-
-  const isLoadingRef = useRef(false);
-  const setLoading = (val: boolean) => {
-    isLoadingRef.current = val;
-  };
-
   const Feedback = useSubmitMessage({
-    successMessage,
-    errorMessage,
+    successMessage: successMessage,
+    errorMessage: errorMessage,
     type: status,
     displayTime: 2000,
   });
 
-  const handleError = (error: unknown) => {
-    if (error instanceof Error) {
-      setErrorMessage(error.message);
-      setStatus('error');
-      console.error(error);
-    } else {
-      setErrorMessage('Erro inesperado');
-      setStatus('error');
-      console.error('Erro desconhecido:', error);
-    }
-  };
-
-  const executeWithFeedback = async (
-    action: () => Promise<void>,
-    successMsg: string,
-    redirectPath?: string,
+  const handleCreateNote = async (
+    title: string = 'Nova nota',
+    content: string = '',
   ) => {
-    if (isLoadingRef.current) return;
+    if (isLoading) return;
 
-    setStatus(null);
-    setLoading(true);
-    try {
-      await action();
-      setSuccessMessage(successMsg);
-      setStatus('success');
-      if (redirectPath) navigate(redirectPath);
-    } catch (error) {
-      handleError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setIsLoading(true);
 
-  const handleCreateNote = async (title = 'Nova nota', content = '') => {
     const tempId = `temp-${Date.now()}`;
     let tempNote: Note = {
       _id: tempId,
@@ -76,106 +48,172 @@ export const useManageNote = () => {
       deletedAt: null,
     };
 
-    setNotes((prev) => [...prev, tempNote]);
+    setNotes((n) => [...n, tempNote]);
     setSelectedNote(tempNote);
+    try {
+      const response = await createNote(title, content);
 
-    const response = await createNote(title, content);
-
-    if (!response.success || !response.data) {
-      setNotes((prev) => prev.filter((note) => note._id !== tempId));
+      if (response.success && response.data) {
+        tempNote = {
+          ...tempNote,
+          _id: response.data._id,
+          isTemporary: false,
+        };
+        setNotes((n) => n.map((n) => (n.isTemporary === true ? tempNote : n)));
+        setSelectedNote(response.data);
+      } else {
+        throw new Error(response.message || 'Erro ao criar nota');
+      }
+    } catch (error) {
+      setNotes((n) => n.filter((n) => n.isTemporary !== true));
       setSelectedNote(null);
-      throw new Error(response.message || 'Erro ao criar nota');
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
-
-    const newNote = notes.filter((note) => note._id === tempId)[0];
-    newNote._id = response.data._id;
-    newNote.isTemporary = false;
-    newNote.createdAt = new Date(response.data.createdAt);
-
-    setNotes((prev) =>
-      prev.map((note) => (note._id === tempId ? newNote : note)),
-    );
-    setSelectedNote(newNote);
-  };
-
-  const handleBulkUpdate = async (
-    notes: Note[],
-    serviceFn: (ids: string[]) => Promise<any>,
-    updateFn: (prevNote: Note) => Note,
-  ) => {
-    if (notes.length === 0) return;
-
-    const ids = notes.map((note) => note._id);
-    const response = await serviceFn(ids);
-
-    if (!response.success) {
-      throw new Error(response.message || 'Erro na operação');
-    }
-
-    setNotes((prev) =>
-      prev.map((note) => (ids.includes(note._id) ? updateFn(note) : note)),
-    );
-    setSelectedNote(null);
-  };
-
-  const temporaryDeleteNote = async (notes: Note[]) => {
-    await handleBulkUpdate(notes, deleteNote, (note) => ({
-      ...note,
-      isDeleted: true,
-      deletedAt: new Date(),
-    }));
-  };
-
-  const handleRestoreNote = async (notes: Note[]) => {
-    await handleBulkUpdate(notes, restoreNote, (note) => ({
-      ...note,
-      isDeleted: false,
-      deletedAt: null,
-    }));
   };
 
   const permanentlyDeleteNote = async (notes: Note[]) => {
-    if (notes.length === 0) return;
+    if (isLoading) return null;
+    setIsLoading(true);
 
-    const ids = notes.map((note) => note._id);
-    const response = await deletePermanentNote(ids);
+    try {
+      if (notes.length === 0) {
+        setIsLoading(false);
+        return;
+      }
+      const response = await deletePermanentNote(notes.map((note) => note._id));
+      if (!response.success) {
+        console.error('Erro ao deletar nota:', response.message);
+        setIsLoading(false);
+        throw new Error(response.message);
+      }
 
-    if (!response.success) {
-      throw new Error(response.message || 'Erro ao deletar notas');
+      if (response.data) setNotes(response.data);
+      setSelectedNote(null);
+    } catch (error) {
+      console.error('Erro ao deletar nota:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
     }
-    
-    setNotes((prevNotes) =>
-      prevNotes.filter((prevNote) => prevNote._id !== notes[0]._id),
-    );
-    setSelectedNote(null);
   };
 
-  // Public handlers com feedback
-  const onCreateNote = () =>
-    executeWithFeedback(
-      () => handleCreateNote(),
-      'Nota criada com sucesso!',
-      '/notes',
-    );
+  const temporaryDeleteNote = async (notes: Note[]) => {
+    if (isLoading) return null;
+    setIsLoading(true);
+    try {
+      const response = await deleteNote(notes.map((note) => note._id));
+      if (!response.success) {
+        console.error('Erro ao deletar nota:', response.message);
+        setIsLoading(false);
+        throw new Error(response.message);
+      }
+      setNotes((prevNotes) =>
+        prevNotes.map((prevNote) =>
+          notes.some((note) => prevNote._id === note._id)
+            ? { ...prevNote, isDeleted: true, deletedAt: new Date() }
+            : prevNote,
+        ),
+      );
+      setSelectedNote(null);
+    } catch (error) {
+      console.error('Erro ao deletar nota:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const onDeleteTemporaryNotes = (notes: Note[]) =>
-    executeWithFeedback(() => temporaryDeleteNote(notes), '');
+  const handleRestoreNote = async (notes: Note[]) => {
+    if (isLoading) return null;
+    setIsLoading(true);
+    try {
+      const response = await restoreNote(notes.map((note) => note._id));
+      if (!response.success) {
+        console.error('Erro ao restaurar nota:', response.message);
+        setIsLoading(false);
+        throw new Error(response.message);
+      }
+      setNotes((prevNotes) =>
+        prevNotes.map((prevNote) =>
+          notes.some((note) => prevNote._id === note._id)
+            ? { ...prevNote, isDeleted: false, deletedAt: null }
+            : prevNote,
+        ),
+      );
+      setSelectedNote(null);
+    } catch (error) {
+      console.error('Erro ao restaurar nota:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const onRestoreNote = (notes: Note[]) =>
-    executeWithFeedback(
-      () => handleRestoreNote(notes),
-      'Nota restaurada com sucesso!',
-      '/notes',
-    );
+  const onRestoreNote = async (notes: Note[]) => {
+    setStatus(null);
+    try {
+      await handleRestoreNote(notes);
+      setSuccessMessage('Nota restaurada com sucesso!');
+      setStatus('success');
+      navigate('/notes');
+    } catch (error) {
+      if (error instanceof Error) {
+        setStatus('error');
+        setErrorMessage(error.message);
+      }
+      console.error('Erro ao restaurar nota:', error);
+    }
+  };
 
-  const onDeletePermanentlyNotes = (notes: Note[]) =>
-    executeWithFeedback(
-      () => permanentlyDeleteNote(notes),
-      'Notas deletadas com sucesso!',
-    );
+  const onCreateNote = async () => {
+    setStatus(null);
+    try {
+      await handleCreateNote();
+      setSuccessMessage('Nota criada com sucesso!');
+      setStatus('success');
+      navigate('/notes');
+    } catch (error) {
+      if (error instanceof Error) {
+        setStatus('error');
+        setErrorMessage(error.message);
+      }
+      console.error('Erro ao criar nota:', error);
+    }
+  };
 
+  const onDeleteTemporaryNotes = async (notes: Note[] ) => {
+    setStatus(null);
+    try {
+      await temporaryDeleteNote(notes);
+      setSuccessMessage('Nota movida para o lixo com sucesso!');
+      setStatus('success');
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+        setStatus('error');
+      }
+      console.error('Erro ao mover para o lixo nota:', error);
+    }
+  };
+
+  const onDeletePermanentlyNotes = async (notes:  Note[] ) => {
+    setStatus(null);
+    try {
+      await permanentlyDeleteNote(notes);
+      setStatus('success');
+      setSuccessMessage('Nota deletada com sucesso!');
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+        setStatus('error');
+      }
+      console.error('Erro ao deletar nota:', error);
+    }
+  };
   return {
-    isLoading: isLoadingRef.current,
+    isLoading,
     onDeletePermanentlyNotes,
     onDeleteTemporaryNotes,
     onCreateNote,

@@ -14,6 +14,7 @@
   height: 80px;
   gap: 1.5rem;
   border-bottom: 1px solid var(--gray6);
+  position: relative;
 }
 
 .main-notes-header h2 {
@@ -140,4 +141,29 @@
 .main-notes main label:has(input:checked)::before {
   background-color: var(--yellow);
   border-color: var(--yellow);
+}
+
+.main-notes .main-notes-menu {
+  position: absolute;
+  top: 60px;
+  left: 24px;
+  background-color: var(--gray8);
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.main-notes .main-notes-menu button {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: 1rem;
+  width: 100%;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.main-notes .main-notes-menu button:hover {
+  background-color: var(--gray7);
+  color: var(--yellow);
 }
