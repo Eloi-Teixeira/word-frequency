@@ -4,6 +4,7 @@ import NotesPage from './pages/NotesPage';
 import { UserProvider } from './context/userContext';
 import { NotesProvider } from './context/notesContext';
 import { Link } from 'react-router-dom';
+import { AuthPage } from './pages/AuthPage';
 
 function App() {
   return (
@@ -17,10 +18,11 @@ function App() {
                 element={
                   <div>
                     <h1>Home</h1><Link to={"/notes"}>Lodf</Link>
+                    <h1>Login</h1><Link to={"/auth/login"}>Faça login</Link>
                   </div>
                 }
               />
-              <Route path="/login" element={<div>Login</div>} />
+              <Route path="/auth/*" element={<AuthPage />} />
               <Route path="/notes/*" element={<NotesPage />} />
             </Routes>
           </BrowserRouter>
