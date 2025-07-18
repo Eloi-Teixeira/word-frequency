@@ -5,7 +5,7 @@ import {
   useContext,
   useEffect,
 } from 'react';
-import { token, useUser } from './userContext';
+import {  useUser } from './userContext';
 import { getAllNotes } from '../services/notesServices';
 
 export interface Note {

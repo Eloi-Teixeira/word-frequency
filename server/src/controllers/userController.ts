@@ -2,13 +2,19 @@ import { Request, Response, NextFunction } from 'express';
 import User from '../models/userModel';
 import catchAsync from '../utils/catchAsync';
 import filterObj from '../utils/filterFields';
+import { AuthRequest } from '../middlewares/authMiddleware';
 
-const createAndSendToken = (user: any, res: Response, message: string, codeStatus?: number) => {
+const createAndSendToken = (
+  user: any,
+  res: Response,
+  message: string,
+  codeStatus?: number,
+) => {
   const token = user.generateAuthToken();
   const cookieOptions = {
     expires: new Date(Date.now() + 72 * 60 * 60 * 1000),
     httpOnly: true,
-    secure: true
+    secure: process.env.NODE_ENV === 'production',
   };
 
   user.password = undefined;
@@ -17,7 +23,6 @@ const createAndSendToken = (user: any, res: Response, message: string, codeStatu
     success: true,
     message: message,
     data: user,
-    token,
   });
 };
 
@@ -56,8 +61,8 @@ export const createUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getUser = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const user = await User.findById(req.params.id);
+  async (req: AuthRequest, res: Response, next: NextFunction) => {
+    const user = await User.findById(req.user?.id);
     if (!user) {
       return res
         .status(404)
@@ -129,11 +134,25 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   }
 
   const user = await User.findOne({ email }).select('+password');
-  if (!user || !(await user.correctPassword(password, user.password))) {
+  if (!user) {
     return res
       .status(404)
       .json({ message: 'Usuário não encontrado', status: false });
   }
 
-  createAndSendToken(user, res, "Usuário logado com sucesso");
+  if (!(await user.correctPassword(password, user.password))) {
+    return res
+      .status(401)
+      .json({ message: 'Senha ou email incorreto', status: false });
+  }
+
+  createAndSendToken(user, res, 'Usuário logado com sucesso');
 });
+
+export const logout = (req: Request, res: Response) => {
+  res.cookie('token', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: true });
+};

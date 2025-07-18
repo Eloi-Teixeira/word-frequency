@@ -1,17 +1,17 @@
+import { Eye, EyeClosed } from 'lucide-react';
+import { useState } from 'react';
 
 interface InputProps {
-  label: string;
   type: string;
   name: string;
   placeholder: string;
-  autoComplete?: string;
+  autoComplete?: 'on' | 'off';
   required?: boolean;
-  value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export default function Input({
-  label,
   type,
   name,
   placeholder,
@@ -20,11 +20,21 @@ export default function Input({
   value,
   onChange,
 }: InputProps) {
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === 'password';
+
+  const togglePassword = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    show: boolean,
+  ) => {
+    e.preventDefault();
+    setShowPassword(show);
+  };
+
   return (
     <label>
-      {label}
       <input
-        type={type}
+        type={isPassword ? (showPassword ? 'text' : 'password') : type}
         name={name}
         placeholder={placeholder}
         autoComplete={autoComplete}
@@ -32,6 +42,16 @@ export default function Input({
         value={value}
         onChange={onChange}
       />
+      {isPassword && (
+        <button
+          className="show-btn"
+          onClick={(e) => {
+            togglePassword(e, !showPassword);
+          }}
+        >
+          {showPassword ? <EyeClosed /> : <Eye />}
+        </button>
+      )}
     </label>
   );
 }

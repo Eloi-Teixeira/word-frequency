@@ -1,6 +1,5 @@
 import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
-
-export const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NWM4MjMyZmEwMGIzZmI1ZGZjZjBkMCIsImlhdCI6MTc1MjMzODc1OCwiZXhwIjoxNzUyNTk3OTU4fQ.aro_zCV-ncfew3zrZTeuyo0Ei9ojNC9d1ScQ5uNoiHQ';
+import { getCurrentUser } from '../services/userServices';
 
 export interface User {
   _id: string;
@@ -19,28 +18,20 @@ export interface User {
 
 interface UserContextProps {
   user: User | null;
+  isLoading: boolean;
   setUser: (user: User | null) => void;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 const getUserFromServer = async (): Promise<User | null> => {
+  
   try {
-    const response = await fetch(
-      'http://localhost:8000/api/users/685c81fad4792738ba2974be',
-      {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    if (!response.ok) {
+    const response = await getCurrentUser();
+    if (!response.success || !response.data) {
       throw new Error('Erro ao obter usuário do servidor');
     }
-    const data = (await response.json()).data as User;
+    const data = response.data;
     return data;
   } catch (error) {
     console.error('Erro ao obter usuário do servidor:', error);
@@ -50,16 +41,18 @@ const getUserFromServer = async (): Promise<User | null> => {
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const fetchUser = async () => {
       const user = await getUserFromServer();
       setUser(user);
+      setIsLoading(false);
     };
     fetchUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, isLoading }}>
       {children}
     </UserContext.Provider>
   );

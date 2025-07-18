@@ -1,21 +1,24 @@
 import { Eye, EyeClosed } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import useManageUser from '../../hook/useManageUser';
+import Input from '../helper/Input';
 
 export default function Signup() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { onCreateUser, Feedback, isLoading } = useManageUser();
 
-  const togglePassword = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    isPassword?: boolean,
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (isPassword) {
-      setShowPassword(!showPassword);
-    } else {
-      setShowConfirmPassword(!showConfirmPassword);
-    }
+    const username = e.currentTarget.username.value;
+    const email = e.currentTarget.email.value;
+    const password = e.currentTarget.password.value;
+    const confirmPassword = e.currentTarget.confirmPassword.value;
+    await onCreateUser({
+      username,
+      email,
+      password,
+      confirmPassword,
+    });
   };
 
   return (
@@ -24,70 +27,46 @@ export default function Signup() {
       <p>
         Já possui uma conta? <Link to={'/auth/login'}>Entre aqui</Link>
       </p>
-      <form
-        className="register-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <input
+      <form className="register-form" onSubmit={handleSubmit}>
+        <Input
           type="text"
           placeholder="Nome"
           name="username"
           autoComplete="on"
           required
         />
-        <input
+        <Input
           type="email"
           placeholder="Email"
           name="email"
           autoComplete="on"
           required
         />
-        <label>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Senha"
-            autoComplete="off"
-            name="password"
-            required
-          />
-          <button
-            className="show-btn"
-            onClick={(e) => {
-              togglePassword( e, true);
-            }}
-          >
-            {showPassword ? <EyeClosed /> : <Eye />}
-          </button>
-        </label>
-        <label>
-          <input
-            type={showConfirmPassword ? 'text' : 'password'}
-            placeholder="Confirme a senha"
-            autoComplete="off"
-            name="confirmPassword"
-            required
-          />
-          <button
-            className="show-btn"
-            onClick={(e) => {
-              togglePassword(e);
-            }}
-          >
-            {showConfirmPassword ? <EyeClosed /> : <Eye />}
-          </button>
-        </label>
+        <Input
+          type="password"
+          name="password"
+          placeholder="Senha"
+          autoComplete="off"
+          required
+        />
+        <Input
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirme a senha"
+          autoComplete="off"
+          required
+        />
         <label className="terms-btn">
           <input type="checkbox" name="terms" required />
           <span>
             Li e concordo com os <Link to="/about">termos de uso</Link>
           </span>
         </label>
-        <button type="submit" className="submit-btn">
-          Criar Conta
+        <button type="submit" className="submit-btn" disabled={isLoading}>
+          {isLoading ? 'Carregando...' : 'Criar Conta'}
         </button>
       </form>
+      {Feedback}
     </div>
   );
 }

@@ -2,43 +2,20 @@ import { Route, Routes } from 'react-router-dom';
 import LoginPage from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
 import Slider from '../components/auth/Slider';
-
-const slides = [
-  { title: 'Organize suas ideias', description: 'Com nosso app de anotações' },
-  { title: 'Acesse de qualquer lugar', description: 'Sincronização em nuvem' },
-  { title: 'Segurança garantida', description: 'Seus dados estão protegidos' },
-];
+import { useUser } from '../context/userContext';
+import { useEffect } from 'react';
 
 export const AuthPage = () => {
-  const [[index, direction], setIndex] = useState<[number, number]>([0, 0]);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Atualiza index e registra direção ANTES
-  const paginate = (newDirection: number) => {
-    setIndex(([prevIndex]) => {
-      const nextIndex =
-        (prevIndex + newDirection + slides.length) % slides.length;
-      return [nextIndex, newDirection];
-    });
-    resetAutoplay();
-  };
-
-  const resetAutoplay = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => paginate(1), 6000);
-  };
+  const { isLoading, user } = useUser();
 
   useEffect(() => {
-    resetAutoplay();
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, []);
+    console.log(user);
+  }, [user]);
+
   return (
     <div className="auth-page">
-        <Slider />
+      <Slider />
 
       <AnimatePresence mode="wait">
         <Routes>
