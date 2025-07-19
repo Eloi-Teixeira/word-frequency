@@ -1,4 +1,6 @@
+import { ArrowRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const slides = [
   { title: 'Organize suas ideias', description: 'Com nosso app de anotações' },
@@ -9,7 +11,6 @@ const slides = [
 export default function Slider() {
   const [current, setCurrent] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-
   const [startX, setStartX] = useState<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -44,8 +45,8 @@ export default function Slider() {
   const onTouchEnd = (e: React.TouchEvent) =>
     handleEnd(e.changedTouches[0].clientX);
 
-  useEffect(()=> {
-    const timer = setTimeout(() => {
+  useEffect(() => {
+    const timer = setInterval(() => {
       if (current < slides.length - 1) {
         setCurrent(current + 1);
       } else {
@@ -53,10 +54,14 @@ export default function Slider() {
       }
     }, 5000);
     if (isDragging) {
-      clearTimeout(timer);
+      clearInterval(timer);
     }
-    return () => clearTimeout(timer);
-  }, [isDragging])
+    return () => clearInterval(timer);
+  }, [isDragging, current]);
+
+  useEffect(() => {
+    console.log(isDragging);
+  }, [isDragging]);
 
   return (
     <div
@@ -89,6 +94,9 @@ export default function Slider() {
           />
         ))}
       </div>
+      <Link to="/" className="back-btn">
+        Voltar para o Home <ArrowRight size={16} />
+      </Link>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import LoginPage from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -47,6 +47,7 @@ export const AuthPage = () => {
               </motion.div>
             }
           />
+          <Route path="*" element={<Navigate to="/auth/login" />} />
         </Routes>
       </AnimatePresence>
     </div>

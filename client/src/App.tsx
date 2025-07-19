@@ -5,10 +5,9 @@ import { NotesProvider } from './context/notesContext';
 import { Link } from 'react-router-dom';
 import { AuthPage } from './pages/AuthPage';
 import ProtectedRoute from './components/helper/ProtectedRoute';
+import PublicRoute from './components/helper/PublicRoute';
 
 function App() {
-
-
   return (
     <div className="App">
       <UserProvider>
@@ -26,7 +25,14 @@ function App() {
                   </div>
                 }
               />
-              <Route path="/auth/*" element={<AuthPage />} />
+              <Route
+                path="/auth/*"
+                element={
+                  <PublicRoute>
+                    <AuthPage />
+                  </PublicRoute>
+                }
+              />
               <Route
                 path="/notes/*"
                 element={
