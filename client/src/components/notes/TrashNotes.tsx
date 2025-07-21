@@ -13,7 +13,9 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
   const [selectNote, setSelectNote] = useState<Note[]>([]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const { notes } = useNotes();
-  const { isLoading, onDeletePermanentlyNotes, Feedback, onRestoreNote } = useManageNote();
+  const { isLoading, onDeletePermanentlyNotes, Feedback, onRestoreNote } =
+    useManageNote();
+  const inactiveNote = notes.filter((note) => note.isDeleted);
 
   const onDeleteNote = async () => {
     if (selectNote.length === 0) {
@@ -45,7 +47,7 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
     setSelectNote([]);
   };
 
-  const restoreNoteSelected = () => {
+  const restoreNotesSelected = () => {
     if (selectNote.length === 0) {
       window.alert('Selecione uma nota');
       return;
@@ -54,17 +56,24 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
   };
 
   const deleteAll = () => {
-    if (selectNote.length === 0) {
-      window.alert('Não há notas na lixeira');
-      return;
+    if (inactiveNote.length === 0) {
+      window.alert('Não há notas na lixeira')
     }
     selectAll();
     onDeletePermanentlyNotes(selectNote);
   };
 
+  const deleteNotesSelected = () => {
+    if (selectNote.length === 0) {
+      window.alert('Não há notas na lixeira');
+      return;
+    }
+    onDeletePermanentlyNotes(selectNote);
+  };
+
   const restoreAll = () => {
     if (notes.length === 0) {
-      window.alert('Não há notas na lixeira');
+      window.alert('Não há notas selcionadas');
       return;
     }
     selectAll();
@@ -72,7 +81,6 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
   };
 
   useEffect(() => {
-    const inactiveNote = notes.filter((note) => note.isDeleted);
     let sorted = inactiveNote.filter((note) => {
       if (search === '') return true;
       if (search.slice(0, 1) === '#') {
@@ -106,8 +114,11 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
           <div className="main-notes-menu">
             <button onClick={selectAll}>Selecionar todos os itens</button>
             <button onClick={unselectAll}>Remover seleção</button>
-            <button onClick={restoreNoteSelected}>Restaurar itens selecionados</button>
+            <button onClick={restoreNotesSelected}>
+              Restaurar itens selecionados
+            </button>
             <button onClick={restoreAll}>Restaurar tudo</button>
+            <button onClick={deleteNotesSelected}>Apagar todos os selecionados</button>
             <button onClick={deleteAll}>Apagar tudo na lixeira</button>
           </div>
         )}

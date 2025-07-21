@@ -34,7 +34,6 @@ const getUserFromServer = async (): Promise<User | null> => {
     const data = response.data;
     return data;
   } catch (error) {
-    console.error('Erro ao obter usuário do servidor:', error);
     return null;
   }
 };

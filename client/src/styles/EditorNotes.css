@@ -49,9 +49,8 @@ article {
 
 .editor-container .tags-container .tag svg {
   width: 16px;
-  margin-right: .25rem;
+  margin-right: 0.25rem;
 }
-
 
 .mdxeditor-toolbar {
   display: flex;
@@ -86,7 +85,7 @@ article {
 }
 
 .mdxeditor ._contentEditable_sects_380 {
-  min-height: calc(100dvh - 85px - 65px);
+  min-height: calc(100dvh - 85px - 65px - 35px);
   width: 100%;
   max-width: 820px;
   margin: 0 auto;

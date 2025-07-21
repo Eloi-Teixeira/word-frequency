@@ -26,6 +26,17 @@ export const useManageNote = () => {
     displayTime: 2000,
   });
 
+  const handleError = (error: unknown) => {
+    if (error instanceof Error) {
+      setStatus('error');
+      if (error.message.includes('401'))
+        return setErrorMessage(
+          'Usuário o token não autorizado. Faça o login novamente',
+        );
+      setErrorMessage(error.message);
+    }
+  };
+
   const handleCreateNote = async (
     title: string = 'Nova nota',
     content: string = '',
@@ -159,10 +170,7 @@ export const useManageNote = () => {
       setStatus('success');
       navigate('/notes');
     } catch (error) {
-      if (error instanceof Error) {
-        setStatus('error');
-        setErrorMessage(error.message);
-      }
+      handleError(error);
       console.error('Erro ao restaurar nota:', error);
     }
   };
@@ -175,30 +183,24 @@ export const useManageNote = () => {
       setStatus('success');
       navigate('/notes');
     } catch (error) {
-      if (error instanceof Error) {
-        setStatus('error');
-        setErrorMessage(error.message);
-      }
+      handleError(error);
       console.error('Erro ao criar nota:', error);
     }
   };
 
-  const onDeleteTemporaryNotes = async (notes: Note[] ) => {
+  const onDeleteTemporaryNotes = async (notes: Note[]) => {
     setStatus(null);
     try {
       await temporaryDeleteNote(notes);
       setSuccessMessage('Nota movida para o lixo com sucesso!');
       setStatus('success');
     } catch (error) {
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-        setStatus('error');
-      }
+      handleError(error);
       console.error('Erro ao mover para o lixo nota:', error);
     }
   };
 
-  const onDeletePermanentlyNotes = async (notes:  Note[] ) => {
+  const onDeletePermanentlyNotes = async (notes: Note[]) => {
     setStatus(null);
     try {
       await permanentlyDeleteNote(notes);
@@ -206,8 +208,7 @@ export const useManageNote = () => {
       setSuccessMessage('Nota deletada com sucesso!');
     } catch (error) {
       if (error instanceof Error) {
-        setErrorMessage(error.message);
-        setStatus('error');
+        handleError(error);
       }
       console.error('Erro ao deletar nota:', error);
     }

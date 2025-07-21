@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { AuthPage } from './pages/AuthPage';
 import ProtectedRoute from './components/helper/ProtectedRoute';
 import PublicRoute from './components/helper/PublicRoute';
+import AboutPage from './pages/AboutPage';
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/about" element={<AboutPage />} />
             </Routes>
           </BrowserRouter>
         </NotesProvider>

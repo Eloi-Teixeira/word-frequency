@@ -4,14 +4,9 @@ import Signup from '../components/auth/Signup';
 import { AnimatePresence, motion } from 'framer-motion';
 import Slider from '../components/auth/Slider';
 import { useUser } from '../context/userContext';
-import { useEffect } from 'react';
 
 export const AuthPage = () => {
   const { isLoading, user } = useUser();
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   return (
     <div className="auth-page">

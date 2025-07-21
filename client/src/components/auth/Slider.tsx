@@ -59,10 +59,6 @@ export default function Slider() {
     return () => clearInterval(timer);
   }, [isDragging, current]);
 
-  useEffect(() => {
-    console.log(isDragging);
-  }, [isDragging]);
-
   return (
     <div
       className="slider-container"

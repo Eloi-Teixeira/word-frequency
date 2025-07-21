@@ -259,7 +259,7 @@ export const restoreNote = catchAsync(
 
     const objectIds = notes.map((id) => new mongoose.Types.ObjectId(id));
 
-    const noteRestored = await Note.findOneAndUpdate(
+    const noteRestored = await Note.updateMany(
       { _id: { $in: objectIds }, userId, isDeleted: true },
       { isDeleted: false, deletedAt: null },
       { new: true },

@@ -149,10 +149,10 @@ export const login = catchAsync(async (req: Request, res: Response) => {
   createAndSendToken(user, res, 'Usuário logado com sucesso');
 });
 
-export const logout = (req: Request, res: Response) => {
+export const logout = catchAsync((req: Request, res: Response) => {
   res.cookie('token', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
   res.status(200).json({ status: true });
-};
+});
