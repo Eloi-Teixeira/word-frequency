@@ -65,7 +65,7 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
 
   const deleteNotesSelected = () => {
     if (selectNote.length === 0) {
-      window.alert('Não há notas na lixeira');
+      window.alert('Não há notas selecionadas');
       return;
     }
     onDeletePermanentlyNotes(selectNote);
@@ -102,7 +102,7 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
 
     sorted = sorted.sort((a, b) => Number(b.pinned) - Number(a.pinned));
     setNotesFiltered(sorted);
-  }, [notes, search]);
+  }, [notes, search, inactiveNote]);
 
   return (
     <section className="main-notes">

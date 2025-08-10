@@ -29,7 +29,6 @@ export default function useManageUser() {
 
   const verify = (
     password: string,
-    email: string,
     confirmPassword?: string,
     username?: string,
   ) => {
@@ -73,7 +72,9 @@ export default function useManageUser() {
   const handleError = (error: unknown) => {
     setStatus(null);
     if (error instanceof AxiosError) {
-      if (error.response?.data.message) {
+      if (error.message === 'Network Error') {
+        setErrorMessage('Erro de conexão. Verifique sua internet.');
+      } else if (error.response) {
         setErrorMessage(error.response.data.message);
       }
     } else if (error instanceof Error) {
@@ -81,6 +82,7 @@ export default function useManageUser() {
     } else {
       setErrorMessage('Erro ao fazer login');
     }
+    console.error(error);
     setTimeout(() => setStatus('error'), 0);
   };
 
@@ -121,7 +123,7 @@ export default function useManageUser() {
     setIsLoading(true);
     setStatus(null);
     try {
-      const verifyFields = verify(password, email, confirmPassword, username);
+      const verifyFields = verify(password, confirmPassword, username);
       if (verifyFields.error) {
         setErrorMessage(verifyFields.message);
         setTimeout(() => setStatus('error'), 0);

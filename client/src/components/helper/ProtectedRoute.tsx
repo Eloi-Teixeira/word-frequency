@@ -1,6 +1,7 @@
 import { JSX, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useUser } from '../../context/userContext';
+import LoadingPage from '../../pages/LoadingPage';
 
 export default function ProtectedRoute({
   children,
@@ -13,7 +14,7 @@ export default function ProtectedRoute({
     console.log(user);
   }, [user]);
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
   return user !== null ? children : <Navigate to="/auth/login" />;
 }

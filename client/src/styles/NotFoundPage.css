@@ -1,0 +1,159 @@
+.not-found-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100dvh;
+}
+
+.not-found-page article {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  max-width: 968px;
+  padding: 2rem;
+  margin-inline: 2rem;
+  border-radius: 2rem;
+  background-color: var(--gray8);
+}
+
+.not-found-page span {
+  color: var(--yellow);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.not-found-page span::before {
+  content: '';
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--yellow);
+  border-radius: 25%;
+  margin-right: 0.5rem;
+}
+
+.not-found-page h1 {
+  font-size: 2.75rem;
+  margin-bottom: 1.5rem;
+  color: var(--yellow);
+}
+
+.not-found-page p {
+  margin-bottom: 1rem;
+}
+
+.not-found-page .links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-block: 1rem;
+}
+
+.not-found-page .links a {
+  color: var(--yellow);
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(251, 176, 0, 0.12);
+  border-radius: 0.5rem;
+  transition: 0.3s ease-in-out;
+}
+
+.not-found-page .links a.back {
+  color: var(--gray8);
+  border: 1px solid var(--yellow);
+  background-color: var(--yellow);
+}
+
+.not-found-page .links a:hover {
+  background-color: rgba(251, 176, 0, 0.12);
+  color: var(--yellow);
+  border: 1px solid var(--yellow);
+}
+
+.not-found-page .illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0.02)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.not-found-page svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.not-found-page .card {
+  border: 1px solid var(--gray6);
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  padding: 1rem;
+  color: var(--gray2);
+  transition: 0.2s ease-in-out;
+}
+
+.not-found-page .card:hover {
+  background-color: var(--gray7);
+}
+
+.not-found-page p a {
+  color: var(--yellow);
+}
+
+.not-found-page p a:hover {
+  text-decoration: underline;
+}
+
+/*
+ - Media Queries
+*/
+
+@media (max-width: 768px) {
+  .not-found-page article {
+    grid-template-columns: 1fr;
+    margin-inline: 1rem;
+  }
+
+  .not-found-page h1 {
+    font-size: 2rem;
+  }
+
+  .not-found-page .links {
+    gap: 0.5rem;
+  }
+
+  .not-found-page .card {
+    background-color: var(--gray7);
+  }
+
+  .not-found-page .illustration {
+    order: -1;
+  }
+}
+
+@media (max-width: 400px) {
+  .not-found-page article {
+    padding: 1.5rem;
+  }
+
+  .not-found-page h1 {
+    font-size: 1.5rem;
+  }
+
+  .not-found-page p {
+    font-size: 0.9rem;
+  }
+
+  .not-found-page .links a {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}

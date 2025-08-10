@@ -7,6 +7,7 @@ import { AuthPage } from './pages/AuthPage';
 import ProtectedRoute from './components/helper/ProtectedRoute';
 import PublicRoute from './components/helper/PublicRoute';
 import AboutPage from './pages/AboutPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
                 }
               />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/*" element={<NotFoundPage />} />
             </Routes>
           </BrowserRouter>
         </NotesProvider>

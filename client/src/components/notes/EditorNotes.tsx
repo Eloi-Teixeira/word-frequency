@@ -103,7 +103,7 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
   }, [note]);
 
   return (
-    <article>
+    <article className="editor-notes">
       <div className="editor-container">
         <input
           className="title-input"

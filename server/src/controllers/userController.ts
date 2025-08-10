@@ -38,6 +38,11 @@ export const createUser = catchAsync(async (req: Request, res: Response) => {
       .status(400)
       .json({ message: 'As senhas não coincidem', status: false });
   }
+  if (password.length < 8) {
+    return res
+      .status(400)
+      .json({ message: 'A senha deve ter pelo menos 8 caracteres', status: false });
+  }
   const userExists = await User.findOne({ email });
   if (userExists) {
     return res
