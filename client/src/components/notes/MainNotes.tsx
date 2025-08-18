@@ -50,7 +50,7 @@ export default function MainNotes({ search, setSearch }: MainNotesProps) {
           <SquarePlus size={24} />
         </button>
       </header>
-      <label className="main-notes-search centralized">
+      <label className="main-notes-search">
         <input
           type="text"
           placeholder="Pesquisar"
@@ -59,7 +59,7 @@ export default function MainNotes({ search, setSearch }: MainNotesProps) {
           onChange={(e) => setSearch(e.target.value)}
         />
       </label>
-      <main className='centralized'>
+      <main>
         {notesFiltered.map((note) => (
           <CardNotes note={note} key={note._id} />
         ))}

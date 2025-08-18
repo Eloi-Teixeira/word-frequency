@@ -29,6 +29,10 @@ export const login = async (data: LoginPayload): Promise<APIResponse<User>> => {
   return response.data;
 };
 
+export const logout = async (): Promise<void> => {
+  await api.get('/users/auth/logout');
+};
+
 export const getUserProfile = async (): Promise<User> => {
   const response = await api.get<User>('/users/');
   return response.data;

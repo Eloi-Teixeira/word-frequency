@@ -3,11 +3,8 @@ import LoginPage from '../components/auth/Login';
 import Signup from '../components/auth/Signup';
 import { AnimatePresence, motion } from 'framer-motion';
 import Slider from '../components/auth/Slider';
-import { useUser } from '../context/userContext';
 
 export const AuthPage = () => {
-  const { isLoading, user } = useUser();
-
   return (
     <div className="auth-page">
       <Slider />
@@ -42,6 +39,8 @@ export const AuthPage = () => {
               </motion.div>
             }
           />
+          <Route path="/forgot" element={<h1>Esqueceu a senha?</h1>} />
+          <Route path="/reset" element={<h1>Resete sua senha</h1>} />
           <Route path="*" element={<Navigate to="/auth/login" />} />
         </Routes>
       </AnimatePresence>

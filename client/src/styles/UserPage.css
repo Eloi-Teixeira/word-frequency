@@ -1,0 +1,142 @@
+.user-page main {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 20px;
+  overflow: hidden;
+  height: 100dvh;
+}
+
+.user-page {
+  background-color: var(--gray8);
+}
+
+.user-page .container {
+  background-color: var(--gray7);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  height: fit-content;
+}
+
+.user-page .container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.user-aside {
+  width: 300px;
+  padding: 20px;
+  color: var(--gray1);
+  border-right: 1px solid var(--gray3);
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.user-aside .profile div {
+  width: 205px;
+  height: 205px;
+  border-radius: 0.5rem;
+  background-color: var(--gray3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--gray9);
+  user-select: none;
+  margin: 0 auto 1rem;
+}
+
+.user-aside .profile button {
+  color: var(--gray9);
+  background-color: var(--gray2);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+}
+
+.user-aside .tags .tag {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 0.25rem 0;
+  border-radius: 0.5rem;
+  transition: 0.3s;
+}
+
+.user-aside .tags .tag:hover {
+  color: var(--yellow);
+}
+
+.user-aside .tags .tag svg {
+  width: 16px;
+  height: 16px;
+  color: var(--yellow);
+}
+
+.user-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  /* Ajusta ao conteúdo, mas pode crescer se outro item precisar */
+  gap: 20px;
+  margin: 0 1.5rem;
+  overflow-y: auto;
+}
+
+.user-stats .table {
+  grid-column: 1/-1;
+}
+
+.user-stats .table div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  margin-top: 20px;
+}
+
+.user-stats .table p {
+  color: var(--gray2);
+}
+
+.user-stats .table span {
+  color: var(--white);
+  text-align: center;
+}
+
+.user-stats section.container {
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  background-color: var(--gray8);
+}
+
+.user-stats section .container {
+  padding: 0.75rem;
+}
+
+.user-stats section .active {
+  background-color: var(--light-green);
+  color: var(--gray8);
+}
+
+.user-stats section .active h3,
+.user-stats section .active h2 {
+  color: var(--green);
+}
+
+.user-stats section .inactive {
+  background-color: var(--light-red);
+  color: var(--gray8);
+}
+
+.user-stats section .inactive h3,
+.user-stats section .inactive h2 {
+  color: var(--red);
+}

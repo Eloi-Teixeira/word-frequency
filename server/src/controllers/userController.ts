@@ -159,5 +159,5 @@ export const logout = catchAsync((req: Request, res: Response) => {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
-  res.status(200).json({ status: true });
+  res.status(200).json({ status: true, message: 'Usuário deslogado com sucesso'});
 });

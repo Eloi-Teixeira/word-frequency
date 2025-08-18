@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useUser } from '../context/userContext';
 import { SubmitMessageStatus, useSubmitMessage } from './useMessage';
-import { createUser, login } from '../services/userServices';
+import { createUser, login, logout } from '../services/userServices';
 import { AxiosError } from 'axios';
 
 interface handleCreateUser {
@@ -28,15 +28,19 @@ export default function useManageUser() {
   });
 
   const verify = (
+    email: string,
     password: string,
     confirmPassword?: string,
     username?: string,
   ) => {
     const validations = [
       {
-        condition:
-          confirmPassword !== undefined && password !== confirmPassword,
-        message: 'As senhas não coincidem',
+        condition: email === undefined || email.trim() === '',
+        message: 'O email é obrigatório',
+      },
+      {
+        condition: password === undefined || password.trim() === '',
+        message: 'A senha é obrigatória',
       },
       {
         condition: password.length < 6,
@@ -59,6 +63,13 @@ export default function useManageUser() {
       //   message: 'O email é inválido',
       // },
     ];
+
+    if (confirmPassword !== undefined) {
+      validations.push({
+        condition: password !== confirmPassword,
+        message: 'As senhas não coincidem',
+      });
+    }
 
     for (const { condition, message } of validations) {
       if (condition) {
@@ -91,7 +102,7 @@ export default function useManageUser() {
     setIsLoading(true);
     setStatus(null);
     try {
-      const verifyFields = verify(password, email);
+      const verifyFields = verify(email, password);
       if (verifyFields.error) {
         setErrorMessage(verifyFields.message);
         setTimeout(() => setStatus('error'), 0);
@@ -123,7 +134,7 @@ export default function useManageUser() {
     setIsLoading(true);
     setStatus(null);
     try {
-      const verifyFields = verify(password, confirmPassword, username);
+      const verifyFields = verify(email, password, confirmPassword, username);
       if (verifyFields.error) {
         setErrorMessage(verifyFields.message);
         setTimeout(() => setStatus('error'), 0);
@@ -151,8 +162,25 @@ export default function useManageUser() {
     }
   };
 
+  const onLogout = async () => {
+   if (!window.confirm("Você tem certeza que deseja sair?")) return
+    setIsLoading(true);
+    setStatus(null);
+    try {
+      setUser(null);
+      await logout();
+      setSuccessMessage('Saída realizada com sucesso!');
+      setTimeout(() => setStatus('success'), 0);
+    } catch (error: unknown) {
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     Feedback,
+    onLogout,
     onLogin,
     onCreateUser,
     isLoading,
