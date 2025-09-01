@@ -4,7 +4,7 @@
 }
 
 .user-page > div {
-  max-width: 1240px;
+  max-width: 1400px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 350px 1fr;
@@ -17,7 +17,7 @@
 .user-page .section-title {
   font-size: 20px;
   font-weight: 600;
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
   color: #fff;
   display: flex;
   align-items: center;
@@ -26,7 +26,7 @@
 
 .user-page .section-title::before {
   content: '';
-  width: 4px;
+  width: 0.25rem;
   height: 20px;
   background: linear-gradient(135deg, #6a6a6a, #8a8a8a);
   border-radius: 2px;
@@ -64,7 +64,7 @@
   font-weight: bold;
   color: #fff;
   margin: 0 auto 20px;
-  border: 4px solid rgba(255, 255, 255, 0.1);
+  border: 0.25rem solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   position: relative;
   overflow: hidden;
@@ -101,7 +101,7 @@
   background: linear-gradient(135deg, #555, #777);
   color: white;
   border: none;
-  padding: 12px 24px;
+  padding: 0.75rem 24px;
   border-radius: 25px;
   cursor: pointer;
   font-weight: 600;
@@ -121,10 +121,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
-  margin-bottom: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  border-radius: 0.75rem;
   border-left: 3px solid #6a6a6a;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -134,7 +134,7 @@
 .user-aside .tags-container .tag:hover {
   background: rgba(255, 255, 255, 0.1);
   transform: translateX(5px);
-  border-left-color: #8a8a8a;
+  border-left-color: var(--yellow);
 }
 
 .user-aside .tags-container .tag:hover {
@@ -148,9 +148,9 @@
 
 .user-aside .tag .tag-count {
   background: rgba(106, 106, 106, 0.3);
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
   font-weight: 600;
 }
 
@@ -159,23 +159,24 @@
 }
 
 .user-aside .tags-container .tag svg {
-  width: 16px;
-  height: 16px;
+  width: 1rem;
+  height: 1rem;
   position: absolute;
   transition: 0.3s ease;
 }
 
-.user-aside .recent-notes li {
-  padding: 12px 16px;
-  margin-bottom: 8px;
+.user-aside .recent-notes .note {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  border-radius: 0.75rem;
   transition: all 0.3s ease;
   cursor: pointer;
   border: 1px solid transparent;
+  display: block;
 }
 
-.user-aside .recent-notes li:hover {
+.user-aside .recent-notes .note:hover {
   background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
@@ -212,20 +213,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0;
+  padding: 1rem 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
-  color: #b0b0b0;
+  color: var(--gray3);
 }
 
 .user-page .stat-item:last-child {
   border-bottom: none;
 }
 
+.user-page .stat-item span {
+  color: var(--gray1);
+}
+
 .user-page .stat-item:hover {
   padding-left: 10px;
   background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
   color: var(--yellow);
 }
 
@@ -241,6 +245,7 @@
   max-height: 530px;
   padding-bottom: 0.875rem;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .user-page .config-section {
@@ -252,50 +257,65 @@
 .user-page .config-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 15px 0;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
 }
 
 .user-page .annotation-item {
   padding: 20px;
-  margin-bottom: 15px;
+  margin-bottom: 1rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  border-left: 4px solid #6a6a6a;
+  border-radius: 1rem;
+  border-left: 0.25rem solid #6a6a6a;
   transition: all 0.3s ease;
   cursor: pointer;
+  height: fit-content;
 }
 
-.user-page .content-grid .annotation-item {
-  height: fit-content;
+.user-page .annotation-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: var(--yellow);
+  transform: translateX(5px);
+}
+
+.user-page .annotation-item:hover .annotation-tags,
+.user-page .annotation-item:hover .annotation-title {
+  color: var(--yellow);
 }
 
 .user-page .annotation-title {
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 0.5rem;
   color: #fff;
+  transition: 0.3s ease;
 }
 
 .user-page .annotation-meta {
-  font-size: 14px;
-  color: #888;
+  font-size: 0.9rem;
+  color: var(--gray3);
   display: flex;
   justify-content: space-between;
   align-items: center;
   user-select: none;
+  transition: 0.3s ease;
+}
+.user-page .annotation-item:hover .annotation-meta {
+  color: var(--gray2);
 }
 
 .user-page .annotation-tag,
 .user-page .annotation-characters {
   background: rgba(106, 106, 106, 0.3);
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.75rem;
+  font-size: 0.75rem;
+  transition: 0.3s ease;
 }
 
 .user-page .annotation-tags {
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .content-grid {
@@ -306,4 +326,33 @@
 
 .user-stats .content-grid .stats-card {
   max-height: fit-content;
+}
+
+.color-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--yellow);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkbox.checked {
+  background: var(--green);
+  border-color: var(--green);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }

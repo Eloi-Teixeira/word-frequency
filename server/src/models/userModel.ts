@@ -33,7 +33,7 @@ const userSchema = new Schema({
       theme: { type: String, enum: ['light', 'dark'], default: 'light' },
       language: { type: String, default: 'pt-BR' },
       fontSize: { type: String, default: '16px' },
-      fontFamily: { type: String, default: 'Arial' },
+      fontFamily: { type: String, default: 'Arial', enum: ['Arial', 'Verdana', 'Helvetica', 'Times New Roman', 'Courier New', 'Georgia', 'Palatino', 'Garamond', 'Bookman', 'Comic Sans MS', 'Trebuchet MS', 'Arial Black', 'Impact'] },
       highlightColor: { type: String, default: '#fb0' },
       boldHighlightColor: { type: String, default: '#fb0' },
       autoSave: { type: Boolean, default: true },

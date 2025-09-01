@@ -1,4 +1,10 @@
-import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
+import {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useEffect,
+} from 'react';
 import { getCurrentUser } from '../services/userServices';
 
 export interface User {
@@ -6,14 +12,16 @@ export interface User {
   name: string;
   email: string;
   configuration: {
-    theme: string;
+    theme: 'light' | 'dark';
     language: string;
     fontSize: string;
     fontFamily: string;
     highlightColor: string;
     boldHighlightColor: string;
     hasBoldHighlightColor: boolean;
-  }
+    autoSaveInterval: number;
+    autosave: boolean;
+  };
 }
 
 interface UserContextProps {
@@ -25,7 +33,6 @@ interface UserContextProps {
 const UserContext = createContext<UserContextProps | undefined>(undefined);
 
 const getUserFromServer = async (): Promise<User | null> => {
-  
   try {
     const response = await getCurrentUser();
     if (!response.success || !response.data) {
