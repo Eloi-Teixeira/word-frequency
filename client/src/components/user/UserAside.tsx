@@ -33,23 +33,21 @@ export default function UserAside() {
   }
   return (
     <aside className="user-aside">
-      <div className="profile container">
+      <div className="profile">
         <div>{userImg}</div>
-        <h1>{user.name}</h1>
-        {/* <p>{user.email}</p>
-        */}
-        <button  onClick={onLogout} disabled={isLoading}>
+        <h2 className='user-name'>{user.name}</h2>
+        <button onClick={onLogout} disabled={isLoading}>
           Sair
         </button>
       </div>
-      <div className="tags container">
-        <h2>Tags</h2>
+      <div className="tags-container">
+        <h2 className="section-title">Tags</h2>
         <ul>
           {tags.length === 0 ? (
             <li className="no-content">Sem tags disponíveis</li>
           ) : (
             Object.keys(tags)
-              .slice(0, 5)
+              .slice(0, 4)
               .map((tag) => (
                 <li key={tag} className="tag">
                   <TagIcon size={16} />
@@ -60,13 +58,13 @@ export default function UserAside() {
           )}
         </ul>
       </div>
-      <div className="notes-recent container">
-        <h2>Recent Notes</h2>
+      <div className="recent-notes">
+        <h2 className='section-title'>Recent Notes</h2>
         <ul>
           {sortedNotes.length === 0 ? (
             <li className="no-content">Sem anotações recente</li>
           ) : (
-            sortedNotes.slice(0, 5).map((note) => (
+            sortedNotes.slice(0, 3).map((note) => (
               <li key={note._id} className="note">
                 {note.title || 'Untitled Note'}
               </li>
