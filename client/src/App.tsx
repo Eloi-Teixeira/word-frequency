@@ -25,6 +25,8 @@ function App() {
                     <Link to={'/notes'}>Lodf</Link>
                     <h1>Login</h1>
                     <Link to={'/auth/login'}>Faça login</Link>
+                    <h1>User</h1>
+                    <Link to={'/user'}>Pagina user</Link>
                   </div>
                 }
               />
@@ -44,8 +46,6 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/*" element={<NotFoundPage />} />
               <Route
                 path="/user"
                 element={
@@ -54,6 +54,8 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/*" element={<NotFoundPage />} />
             </Routes>
           </BrowserRouter>
         </NotesProvider>

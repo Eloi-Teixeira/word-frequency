@@ -1,9 +1,16 @@
 import { JSX } from 'react';
 import { useUser } from '../../context/userContext';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
+import LoadingPage from '../../pages/LoadingPage';
 
 export default function PublicRoute({ children }: { children: JSX.Element }) {
-  const { user } = useUser();
+  const { user, isLoading } = useUser();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || '/notes';
 
-  return user ? <Navigate to="/notes" /> : children;
+  console.log(location.pathname);
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+  return user ? <Navigate to={from} replace /> : children;
 }

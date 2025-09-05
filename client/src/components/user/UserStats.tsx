@@ -116,7 +116,6 @@ export default function UserStats() {
             ) : (
               notes
                 .filter((note) => note.pinned)
-                .slice(0, 3)
                 .map((note) => (
                   <li
                     key={note._id}

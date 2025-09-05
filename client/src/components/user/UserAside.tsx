@@ -37,8 +37,9 @@ export default function UserAside() {
   return (
     <aside className="user-aside">
       <div className="profile">
-        <div>{userImg}</div>
+        <div className="profile-img">{userImg}</div>
         <h2 className="user-name">{user.name}</h2>
+
         <button onClick={onLogout} disabled={isLoading}>
           Sair
         </button>
@@ -81,6 +82,9 @@ export default function UserAside() {
           )}
         </nav>
       </div>
+  
+        <Link to={'/'} className="back-home">Voltar para Home</Link>
+    
       {Feedback}
     </aside>
   );
