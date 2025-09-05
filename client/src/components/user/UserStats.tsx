@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNotes } from '../../context/notesContext';
 import { useUser } from '../../context/userContext';
-import { Link } from 'react-router-dom';
+import { useManageNote } from '../../hook/useManageNote';
 
 export default function UserStats() {
-  const [load, setload] = useState();
   const { notes } = useNotes();
-  const { user } = useUser()
+  const { user } = useUser();
+  const { navigateToNote } = useManageNote();
 
   const totalNotes = notes.length;
   const totalCaracters = notes.reduce(
@@ -75,11 +75,17 @@ export default function UserStats() {
             </div>
             <div className="config-item">
               <span>Auto-salvamento</span>
-              <span className={`checkbox ${user?.configuration?.autosave ? 'checked' : ''} checked`}></span>
+              <span
+                className={`checkbox ${
+                  user?.configuration?.autosave ? 'checked' : ''
+                }`}
+              ></span>
             </div>
             <div className="config-item">
               <span>Tempo de salvamento</span>
-              <span className="">{user?.configuration?.autoSaveInterval || 5000} ms</span>
+              <span className="">
+                {user?.configuration?.autoSaveInterval || 5000} ms
+              </span>
             </div>
             <div className="config-item">
               <span>Tamanho da fonte</span>
@@ -87,11 +93,15 @@ export default function UserStats() {
             </div>
             <div className="config-item">
               <span>Familia da fonte</span>
-              <span className="">{user?.configuration?.fontFamily || 'Arial'}</span>
+              <span className="">
+                {user?.configuration?.fontFamily || 'Arial'}
+              </span>
             </div>
             <div className="config-item">
               <span>Tema</span>
-              <span style={{textTransform: 'capitalize'}}>{user?.configuration?.theme || 'dark'}</span>
+              <span style={{ textTransform: 'capitalize' }}>
+                {user?.configuration?.theme || 'dark'}
+              </span>
             </div>
           </div>
         </div>
@@ -108,20 +118,22 @@ export default function UserStats() {
                 .filter((note) => note.pinned)
                 .slice(0, 3)
                 .map((note) => (
-                  <li key={note._id} className="annotation-item">
-                    <Link to={`/notes?id=${note._id}`}>
-                      <span className="annotation-title">{note.title}</span>
-                      <div className="annotation-meta">
-                        <span>Atualizado: {dateToString(note.updatedAt)}</span>
-                        <div className="annotation-tags">
-                          {note.tags.slice(0, 2).map((tag) => (
-                            <span key={tag} className="annotation-tag">
-                              {tag}
-                            </span>
-                          )) || ''}
-                        </div>
+                  <li
+                    key={note._id}
+                    className="annotation-item"
+                    onClick={() => navigateToNote(note._id)}
+                  >
+                    <span className="annotation-title">{note.title}</span>
+                    <div className="annotation-meta">
+                      <span>Atualizado: {dateToString(note.updatedAt)}</span>
+                      <div className="annotation-tags">
+                        {note.tags.slice(0, 2).map((tag) => (
+                          <span key={tag} className="annotation-tag">
+                            {tag}
+                          </span>
+                        )) || ''}
                       </div>
-                    </Link>
+                    </div>
                   </li>
                 ))
             )}
@@ -135,13 +147,17 @@ export default function UserStats() {
               <li className="no-content">Nenhuma anotação encontrada</li>
             ) : (
               sortedNotes.slice(0, 5).map((note) => (
-                <li key={note._id} className="annotation-item">
-                  <Link to={`/notes?id=${note._id}`}>
-                    <span className="annotation-title">{note.title}</span>{' '}
-                    <div className='annotation-meta'>
-                      <span>{note.content.length} caracteres</span>
-                    </div>
-                  </Link>
+                <li
+                  key={note._id}
+                  className="annotation-item"
+                  onClick={() => navigateToNote(note._id)}
+                >
+                  <span className="annotation-title">{note.title}</span>{' '}
+                  <div className="annotation-meta">
+                    <span className="annotation-tag">
+                      {note.content.length} caracteres
+                    </span>
+                  </div>
                 </li>
               ))
             )}

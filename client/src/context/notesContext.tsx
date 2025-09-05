@@ -5,7 +5,7 @@ import {
   useContext,
   useEffect,
 } from 'react';
-import {  useUser } from './userContext';
+import { useUser } from './userContext';
 import { getAllNotes } from '../services/notesServices';
 
 export interface Note {
@@ -26,6 +26,8 @@ interface NotesContextProps {
   notes: Note[];
   selectedNote: Note | null;
   setSelectedNote: React.Dispatch<React.SetStateAction<Note | null>>;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const NotesContext = createContext<NotesContextProps | null>(null);
@@ -51,6 +53,7 @@ const getNotesFromServer = async () => {
 export const NotesProvider = ({ children }: { children: ReactNode }) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [search, setSearch] = useState('');
   const { user } = useUser();
 
   useEffect(() => {
@@ -65,7 +68,14 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <NotesContext.Provider
-      value={{ notes, setNotes, selectedNote, setSelectedNote }}
+      value={{
+        notes,
+        setNotes,
+        selectedNote,
+        setSelectedNote,
+        search,
+        setSearch,
+      }}
     >
       {children}
     </NotesContext.Provider>

@@ -2,12 +2,14 @@ import { TagIcon } from 'lucide-react';
 import { useNotes } from '../../context/notesContext';
 import { useUser } from '../../context/userContext';
 import useManageUser from '../../hook/useManageUser';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useManageNote } from '../../hook/useManageNote';
 
 export default function UserAside() {
   const { user } = useUser();
   const { notes } = useNotes();
   const { onLogout, isLoading, Feedback } = useManageUser();
+  const { navigateToNote } = useManageNote();
   const userImg =
     user?.name
       .split(' ')
@@ -68,9 +70,13 @@ export default function UserAside() {
             <li className="no-content">Sem anotações recente</li>
           ) : (
             sortedNotes.slice(0, 3).map((note) => (
-              <Link to={`/notes?id=${note._id}`} className="note" key={note._id}>
+              <span
+                onClick={() => navigateToNote(note._id)}
+                className="note"
+                key={note._id}
+              >
                 {note.title || 'Untitled Note'}
-              </Link>
+              </span>
             ))
           )}
         </nav>

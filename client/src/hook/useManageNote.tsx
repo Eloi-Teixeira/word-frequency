@@ -10,7 +10,7 @@ import { SubmitMessageStatus, useSubmitMessage } from './useMessage';
 import { useNavigate } from 'react-router-dom';
 
 export const useManageNote = () => {
-  const { setNotes, setSelectedNote } = useNotes();
+  const { setNotes, setSelectedNote, notes } = useNotes();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('Erro ao criar nota');
   const [status, setStatus] = useState<SubmitMessageStatus>(null);
@@ -25,6 +25,13 @@ export const useManageNote = () => {
     type: status,
     displayTime: 2000,
   });
+
+    const navigateToNote = (id: string) => {
+    setSelectedNote(
+      notes.find((note) => note._id.toString() === id.toString()) || null,
+    );
+    navigate(`/notes`);
+  };
 
   const handleError = (error: unknown) => {
     if (error instanceof Error) {
@@ -217,6 +224,7 @@ export const useManageNote = () => {
     isLoading,
     onDeletePermanentlyNotes,
     onDeleteTemporaryNotes,
+    navigateToNote,
     onCreateNote,
     onRestoreNote,
     Feedback,

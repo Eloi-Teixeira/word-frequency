@@ -10,17 +10,9 @@ import {
   Trash,
 } from 'lucide-react';
 
-interface AsideNotesProps {
-  setOpenConfig: React.Dispatch<React.SetStateAction<boolean>>;
-  setTagToSearch: (search: string) => void;
-}
-
-export default function AsideNotes({
-  setOpenConfig,
-  setTagToSearch,
-}: AsideNotesProps) {
+export default function AsideNotes({}) {
   const [tags, setTags] = React.useState<string[]>([]);
-  const { notes } = useNotes();
+  const { notes, setSearch } = useNotes();
 
   useEffect(() => {
     const activeNotes = notes.filter((note) => !note.isDeleted);
@@ -35,13 +27,19 @@ export default function AsideNotes({
       <div>
         <ul>
           <li>
-            <NavLink to={'/notes'} end onClick={() => setTagToSearch('')}>
+            <NavLink to={'/notes'} end onClick={() => setSearch('')}>
               <StickyNote size={16} />
               Todas as notas
             </NavLink>
           </li>
-          <li onClick={() => setOpenConfig(true)}>
-            <Link to={'/notes'}>
+          <li onClick={() => setSearch('')}>
+            <NavLink to="/notes/trash">
+              <Trash size={16} />
+              Lixeira
+            </NavLink>
+          </li>
+          <li>
+            <Link to={'/user'}>
               <Settings size={16} />
               Configurações
             </Link>
@@ -58,12 +56,6 @@ export default function AsideNotes({
               Ajuda e Suporte
             </Link>
           </li>
-          <li>
-            <NavLink to="/notes/trash">
-              <Trash size={16} />
-              Lixeira
-            </NavLink>
-          </li>
         </ul>
       </div>
       <div>
@@ -77,7 +69,7 @@ export default function AsideNotes({
                 <span
                   className="tag"
                   key={tag}
-                  onClick={() => setTagToSearch(`#${tag}`)}
+                  onClick={() => setSearch(`#${tag}`)}
                 >
                   <Tag size={16} /> {tag}
                 </span>

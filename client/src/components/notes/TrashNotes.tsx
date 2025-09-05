@@ -8,11 +8,11 @@ interface TrashNotesProps {
   setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
 
-export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
+export const TrashNotes = () => {
   const [notesFiltered, setNotesFiltered] = useState<Note[]>([]);
   const [selectNote, setSelectNote] = useState<Note[]>([]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const { notes } = useNotes();
+  const { notes, search, setSearch } = useNotes();
   const { isLoading, onDeletePermanentlyNotes, Feedback, onRestoreNote } =
     useManageNote();
   const inactiveNote = notes.filter((note) => note.isDeleted);
@@ -57,9 +57,9 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
 
   const deleteAll = () => {
     if (inactiveNote.length === 0) {
-      window.alert('Não há notas na lixeira')
+      window.alert('Não há notas na lixeira');
     }
-    selectAll();
+    setSelectNote(notes.filter((note) => note.isDeleted));
     onDeletePermanentlyNotes(selectNote);
   };
 
@@ -76,7 +76,7 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
       window.alert('Não há notas selcionadas');
       return;
     }
-    selectAll();
+    setSelectNote(notes.filter((note) => note.isDeleted));
     onRestoreNote(selectNote);
   };
 
@@ -118,7 +118,9 @@ export const TrashNotes = ({ search, setSearch }: TrashNotesProps) => {
               Restaurar itens selecionados
             </button>
             <button onClick={restoreAll}>Restaurar tudo</button>
-            <button onClick={deleteNotesSelected}>Apagar todos os selecionados</button>
+            <button onClick={deleteNotesSelected}>
+              Apagar todos os selecionados
+            </button>
             <button onClick={deleteAll}>Apagar tudo na lixeira</button>
           </div>
         )}

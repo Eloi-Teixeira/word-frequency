@@ -4,13 +4,8 @@ import CardNotes from './CardNotes';
 import { useEffect, useState } from 'react';
 import { useManageNote } from '../../hook/useManageNote';
 
-interface MainNotesProps {
-  search: string;
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export default function MainNotes({ search, setSearch }: MainNotesProps) {
-  const { notes } = useNotes();
+export default function MainNotes() {
+  const { notes, search, setSearch } = useNotes();
   const [notesFiltered, setNotesFiltered] = useState<Note[]>([]);
   const { onCreateNote, isLoading, Feedback } = useManageNote();
 

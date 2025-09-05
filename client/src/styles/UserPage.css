@@ -109,6 +109,12 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.user-aside .profile button:hover {
+  background: linear-gradient(135deg, #777, #999);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
 .user-aside .user-name {
   text-align: center;
   font-size: 28px;

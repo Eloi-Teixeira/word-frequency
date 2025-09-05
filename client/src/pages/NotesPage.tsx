@@ -26,16 +26,16 @@ export default function NotesPage() {
 
   return (
     <div className="notes-page">
-      <AsideNotes setOpenConfig={setIsMenuOpen} setTagToSearch={setSearch} />
+      <AsideNotes />
       <Routes>
         <Route
           path="/"
-          element={<MainNotes search={search} setSearch={setSearch} />}
+          element={<MainNotes />}
         />
         <Route path="/tags" element={<div>Tags</div>} />
         <Route
           path="/trash"
-          element={<TrashNotes search={search} setSearch={setSearch} />}
+          element={<TrashNotes />}
         />
       </Routes>
       {selectedNote ? (
