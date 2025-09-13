@@ -9,6 +9,8 @@ import PublicRoute from './components/helper/PublicRoute';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UserPage from './pages/UserPage';
+import HomePage from './pages/HomePage';
+import LoadingPage from './pages/LoadingPage';
 
 function App() {
   return (
@@ -17,19 +19,7 @@ function App() {
         <NotesProvider>
           <BrowserRouter>
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <div>
-                    <h1>Home</h1>
-                    <Link to={'/notes'}>Lodf</Link>
-                    <h1>Login</h1>
-                    <Link to={'/auth/login'}>Faça login</Link>
-                    <h1>User</h1>
-                    <Link to={'/user'}>Pagina user</Link>
-                  </div>
-                }
-              />
+              <Route path="/" element={<HomePage />} />
               <Route
                 path="/auth/*"
                 element={
@@ -54,8 +44,8 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-                <Route path="/about" element={<AboutPage />} />
-                <Route path="/*" element={<NotFoundPage />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/*" element={<NotFoundPage />} />
             </Routes>
           </BrowserRouter>
         </NotesProvider>

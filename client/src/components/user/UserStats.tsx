@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useNotes } from '../../context/notesContext';
 import { useUser } from '../../context/userContext';
 import { useManageNote } from '../../hook/useManageNote';

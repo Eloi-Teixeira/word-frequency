@@ -7,8 +7,10 @@ export default function PublicRoute({ children }: { children: JSX.Element }) {
   const { user, isLoading } = useUser();
   const location = useLocation();
   let from = location.state?.from?.pathname || '/notes';
+  if (from.includes('/auth')) {
+    from = '/notes';
+  }
 
-  console.log(location.pathname);
   if (isLoading) {
     return <LoadingPage />;
   }

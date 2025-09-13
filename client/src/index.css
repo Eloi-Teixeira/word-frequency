@@ -7,4 +7,5 @@
 @import './styles/AuthPage.css';
 @import './styles/NotFoundPage.css';
 @import './styles/LoadingPage.css';
-@import './styles/UserPage.css'
+@import './styles/UserPage.css';
+@import './styles/HomePage.css';

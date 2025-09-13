@@ -2,7 +2,7 @@ import { TagIcon } from 'lucide-react';
 import { useNotes } from '../../context/notesContext';
 import { useUser } from '../../context/userContext';
 import useManageUser from '../../hook/useManageUser';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useManageNote } from '../../hook/useManageNote';
 
 export default function UserAside() {
