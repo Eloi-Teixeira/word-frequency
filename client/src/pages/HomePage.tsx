@@ -25,6 +25,29 @@ export default function HomePage() {
     },
   ];
 
+  const features = [
+    {
+      icon: <Zap size={16} color="#fff" />,
+      title: 'Produtividade',
+      description: 'Fluxo limpo para manter o foco.',
+    },
+    {
+      icon: <CircleCheckBig size={16} color="#fff" />,
+      title: 'Anotações Rápidas',
+      description: 'Capture ideias em um clique.',
+    },
+    {
+      icon: <Shield size={16} color="#fff" />,
+      title: 'Segurança',
+      description: 'Criptografia e privacidade desde o início.',
+    },
+    {
+      icon: <RefreshCcw size={16} color="#fff" />,
+      title: 'Sincronização',
+      description: 'Acesse suas notas em todos os dispositivos',
+    },
+  ];
+
   return (
     <div className="home-page">
       <MotionConfig transition={{ duration: 1.2, ease: [0.2, 0.8, 0.2, 1] }}>
@@ -78,16 +101,25 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               className="text-gray-300 max-w-xl"
             >
-              Transforme pensamentos em notas organizadas de forma instantânea. Sem distrações, sem complicações — apenas você e sua criatividade fluindo
+              Transforme pensamentos em notas organizadas de forma instantânea.
+              Sem distrações, sem complicações — apenas você e sua criatividade
+              fluindo
             </motion.p>
-            <div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <Link to={'/auth/login'} className="btn-primary">
                 Começar Agora
               </Link>
               <a href={'#func'} className="btn-secondary">
                 Ver Recursos
               </a>
-            </div>
+            </motion.div>
+            <motion.div
+              className="home-hero-line"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 1.5, ease: 'easeInOut' }}
+              style={{ transformOrigin: 'center' }}
+            />
           </section>
 
           <section id="works" className="home-section">
@@ -163,42 +195,15 @@ export default function HomePage() {
                 seu foco. Tagueie, pesquise e recupere ideias em segundos.
               </p>
               <div className="features-grid">
-                <div className="feature-card">
-                  <div className="icon-bg">
-                    <Zap size={16} color="#fff" />
+                {features.map((feature, index) => (
+                  <div key={index} className="feature-card">
+                    <div className="icon-bg">{feature.icon}</div>
+                    <div>
+                      <h2>{feature.title}</h2>
+                      <p>{feature.description}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h2>Produtividade</h2>
-                    <p>Fluxo limpo para manter o foco.</p>
-                  </div>
-                </div>
-                <div className="feature-card">
-                  <div className="icon-bg">
-                    <CircleCheckBig size={16} color="#fff" />
-                  </div>
-                  <div>
-                    <h2>Anotações Rápidas</h2>
-                    <p>Capture ideias em um clique.</p>
-                  </div>
-                </div>
-                <div className="feature-card">
-                  <div className="icon-bg">
-                    <Shield size={16} color="#fff" />
-                  </div>
-                  <div>
-                    <h2>Segurança</h2>
-                    <p>Criptografia e privacidade desde o início.</p>
-                  </div>
-                </div>
-                <div className="feature-card">
-                  <div className="icon-bg">
-                    <RefreshCcw size={16} color="#fff" />
-                  </div>
-                  <div>
-                    <h2>Sincronização</h2>
-                    <p>Acesse suas notas em todos os dispositivos</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
             <div>
