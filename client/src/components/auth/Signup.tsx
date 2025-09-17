@@ -1,5 +1,3 @@
-import { Eye, EyeClosed } from 'lucide-react';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import useManageUser from '../../hook/useManageUser';
 import Input from '../helper/Input';

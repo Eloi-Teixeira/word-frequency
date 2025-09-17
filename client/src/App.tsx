@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import NotesPage from './pages/NotesPage';
 import { UserProvider } from './context/userContext';
 import { NotesProvider } from './context/notesContext';
-import { Link } from 'react-router-dom';
 import { AuthPage } from './pages/AuthPage';
 import ProtectedRoute from './components/helper/ProtectedRoute';
 import PublicRoute from './components/helper/PublicRoute';
@@ -10,7 +9,6 @@ import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 import UserPage from './pages/UserPage';
 import HomePage from './pages/HomePage';
-import LoadingPage from './pages/LoadingPage';
 
 function App() {
   return (

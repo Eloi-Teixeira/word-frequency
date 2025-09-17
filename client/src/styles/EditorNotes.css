@@ -5,7 +5,7 @@
   flex-direction: column;
   background-color: var(--gray8);
   align-items: center;
-  overflow-y: auto;
+  overflow-y: hidden;
   justify-content: center;
 }
 
@@ -26,14 +26,6 @@
   color: var(--gray2);
   margin: 0 auto;
   display: block;
-}
-
-.editor-container .tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-bottom: 1px solid var(--gray6);
 }
 
 .editor-container .tags-container .tag {

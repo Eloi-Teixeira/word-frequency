@@ -9,17 +9,16 @@ import { TrashNotes } from '../components/notes/TrashNotes';
 import { useManageNote } from '../hook/useManageNote';
 
 export default function NotesPage() {
-  const { selectedNote, notes, setNotes } = useNotes();
+  const { selectedNote, setNotes, notes } = useNotes();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const { onCreateNote, isLoading } = useManageNote();
+  const { onCreateNote } = useManageNote();
 
   const saveNote = useCallback(
     (updatedNote: Note) => {
-      // const updatedNotes = notes.map((note) =>
-      //   note._id === updatedNote._id ? { ...updatedNote } : note,
-      // );
-      // setNotes(updatedNotes);
+      const updatedNotes = notes.map((note) =>
+        note._id === updatedNote._id ? { ...updatedNote } : note,
+      );
+      setNotes(updatedNotes);
     },
     [notes],
   );
@@ -28,22 +27,12 @@ export default function NotesPage() {
     <div className="notes-page">
       <AsideNotes />
       <Routes>
-        <Route
-          path="/"
-          element={<MainNotes />}
-        />
+        <Route path="/" element={<MainNotes />} />
         <Route path="/tags" element={<div>Tags</div>} />
-        <Route
-          path="/trash"
-          element={<TrashNotes />}
-        />
+        <Route path="/trash" element={<TrashNotes />} />
       </Routes>
       {selectedNote ? (
-        <EditorNotes
-          note={selectedNote}
-          saveNote={saveNote}
-          setSearch={setSearch}
-        />
+        <EditorNotes note={selectedNote} saveNote={saveNote} />
       ) : (
         <section className="empty-notes" onClick={onCreateNote}>
           <h1>Está tão vazio aqui...</h1>

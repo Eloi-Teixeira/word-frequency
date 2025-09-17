@@ -63,7 +63,7 @@ button {
   color: currentColor;
 }
 
-input {
+input, textarea, textarea:focus {
   background-color: transparent;
   border: none;
   outline: none;

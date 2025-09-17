@@ -1,98 +1,79 @@
 import { Note } from '../../context/notesContext';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import {
-  MDXEditor,
-  headingsPlugin,
-  listsPlugin,
-  quotePlugin,
-  thematicBreakPlugin,
-  markdownShortcutPlugin,
-  toolbarPlugin,
-  UndoRedo,
-  BoldItalicUnderlineToggles,
-  codeBlockPlugin,
-  linkPlugin,
-  tablePlugin,
-  MDXEditorMethods,
-} from '@mdxeditor/editor';
-import { Tag } from 'lucide-react';
+import MarkdownEditor from '../../hook/MarkdownEditor';
 
 interface EditorNotesProps {
   note: Note;
   saveNote: (note: Note) => void;
-  setSearch: (search: string) => void;
+  time?: number;
 }
 
-// - [ ] Erro Ao salvar nota após alteração do conteúdo
-// - [ ] Erro ao adicionar nota vazia, criação de um editor paralelo
-
-export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
+export const EditorNotes = ({ note, saveNote, time = 5 }: EditorNotesProps) => {
   const [title, setTitle] = useState(note.title);
+  const editorRef = useRef<MarkdownEditor | null>(null);
 
   const latestNoteRef = useRef<Note>(note);
-  const editorRef = useRef<MDXEditorMethods | null>(null);
   const saveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    setTitle(note.title);
-    latestNoteRef.current = note;
-  }, [note]);
+  function debounce(fn: (...args: any[]) => void, delay: number) {
+    let timer: ReturnType<typeof setTimeout>;
+    return (...args: any[]) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn(...args), delay);
+    };
+  }
 
-  const hasNoteChanged = useCallback((currentNote: Note) => {
-    return (
-      latestNoteRef.current.title !== currentNote.title ||
-      latestNoteRef.current.content !== currentNote.content
-    );
-  }, []);
-
-  const debouncedSave = useCallback(() => {
-    if (saveTimerRef.current) {
-      clearTimeout(saveTimerRef.current);
-    }
-
-    saveTimerRef.current = setTimeout(() => {
-      const currentTitle =
-        title.trim().length === 0 ? 'Sem título' : title.trim();
-      const currentContent = editorRef.current?.getMarkdown() ?? note.content;
-
-      const noteToSave: Note = {
-        ...note,
-        title: currentTitle,
-        content: currentContent,
-        updatedAt: new Date(),
-      };
-      if (!hasNoteChanged(noteToSave)) {
-        console.log('Nota inalterada no debounce, pulando salvamento.');
-        return;
-      }
-      latestNoteRef.current = { ...noteToSave };
-      saveNote(latestNoteRef.current);
-    }, 1500);
-  }, []);
+  const debouncedSave = useCallback(
+    debounce((title: string, latestNote: Note) => {
+      saveNote({ ...latestNote, title });
+    }, 300),
+    [],
+  );
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitleValue = e.target.value;
+    let newTitleValue = e.target.value;
+    if (newTitleValue.trim().length > 100) {
+      window.alert('Limite da Caracteres alcançado');
+      newTitleValue = newTitleValue.slice(0, 100);
+    }
     const processedTitle =
       newTitleValue.length === 0 ? 'Sem título' : newTitleValue.trim();
 
     setTitle(newTitleValue);
+    debouncedSave(processedTitle, latestNoteRef.current);
 
     latestNoteRef.current = {
       ...latestNoteRef.current,
       title: processedTitle,
     };
-
-    debouncedSave();
   };
 
+  const onChangeSave = () => {
+    if (editorRef.current) {
+      const data = editorRef.current.exportData();
+      const newNote: Note = {
+        ...note,
+        content: data.text,
+        tags: data.tags,
+        title,
+        updatedAt: new Date(),
+      };
+      saveNote(newNote);
+    }
+  };
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (saveTimerRef.current) {
-        clearTimeout(saveTimerRef.current);
-      }
-      latestNoteRef.current.updatedAt = new Date();
+    setTitle(note.title);
+    latestNoteRef.current = note;
+  }, [note]);
+
+  useEffect(() => {
+    debounce(() => {
       saveNote(latestNoteRef.current);
-    };
+    }, time * 1000 * 60);
+  });
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {};
 
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
@@ -118,69 +99,12 @@ export const EditorNotes = ({ note, saveNote }: EditorNotesProps) => {
           }}
           placeholder="Título da nota"
         />
-        <div className="tags-container">
-          {note.tags.map((t, i) => {
-            return (
-              <span className="tag" key={t + i}>
-                <Tag />
-                {t}
-              </span>
-            );
-          })}
-        </div>
-        <MDXEditor
+        <MarkdownEditor
           key={note._id}
+          initialText={note.content}
           ref={editorRef}
-          markdown={note.content}
-          onChange={(newMarkdown) => {
-            latestNoteRef.current = {
-              ...latestNoteRef.current,
-              content: newMarkdown,
-            };
-            debouncedSave();
-          }}
-          onBlur={() => {
-            latestNoteRef.current.updatedAt = new Date();
-            saveNote(latestNoteRef.current);
-          }}
-          // suppressHtmlProcessing={true}
-          // Plugins para as funcionalidades do editor e da barra de ferramentas
-          plugins={[
-            headingsPlugin(),
-            listsPlugin(),
-            quotePlugin(),
-            thematicBreakPlugin(),
-            codeBlockPlugin(),
-            linkPlugin(),
-
-            // tablePlugin(), // Exemplo de plugin adicional
-            markdownShortcutPlugin(), // Permite atalhos de teclado Markdown (ex: ## para h2)
-            // Plugin da barra de ferramentas (para botões visíveis)
-
-            toolbarPlugin({
-              toolbarContents: () => {
-                if (note.isDeleted) {
-                  return <>Não editavel</>;
-                }
-                return (
-                  <>
-                    <UndoRedo /> {/* Botões de desfazer/refazer */}
-                    <BoldItalicUnderlineToggles />{' '}
-                    {/* Botões de negrito, itálico, sublinhado */}
-                    {/* Você pode adicionar mais componentes de toolbar aqui, ex:
-                  <CreateLink />
-                  <BlockTypeSelect />
-                  <ChangeCodeMirrorLanguage />
-                  <InsertImage />
-                  ... e muitos outros que vêm com os plugins
-                  */}
-                  </>
-                );
-              },
-            }),
-          ]}
-          placeholder="Comece a escrever sua nota..."
-          readOnly={note.isDeleted} // Se o editor deve ser apenas leitura
+          onChange={onChangeSave}
+          className="editor"
         />
       </div>
     </article>
