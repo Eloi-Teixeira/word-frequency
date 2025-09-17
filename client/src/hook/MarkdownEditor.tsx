@@ -104,39 +104,6 @@ class MarkdownEditor extends Component<
     };
   }
 
-  private getDefaultText(): string {
-    return `# Bem-vindo ao Editor Markdown
-
-Este é um **editor de markdown** onde você pode editar e visualizar o resultado em tempo real.
-
-## Como usar
-
-- Clique no botão <Type /> para alternar entre a **edição de código** e o **preview**.
-- Utilize a barra de ferramentas para formatação rápida.
-- A análise de conteúdo fornece estatísticas úteis.
-
-### Funcionalidades suportadas #funcionalidades #markdown #editor
-
-1. **Formatação de texto**: *itálico*, **negrito**, \`código inline\`
-2. **Links**: [GitHub](https://github.com)
-3. **Listas** ordenadas e não ordenadas
-4. **Citações** e blocos de código
-5. **Imagens** e tabelas
-
-> 💡 **Dica**: A visualização ao vivo será exibida ao desativar o "Modo Código".
-
-\`\`\`javascript
-// Exemplo de bloco de código
-function saudar(nome) {
-  return \`Olá, \${nome}!\`;
-}
-\`\`\`
-
----
-
-**Experimente editar este texto agora mesmo!** 🚀 #react #editor`;
-  }
-
   // Métodos públicos
   public getText(): string {
     return this.state.markdown;
