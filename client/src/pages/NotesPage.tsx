@@ -5,7 +5,6 @@ import { EditorNotes } from '../components/notes/EditorNotes';
 import { Note, useNotes } from '../context/notesContext';
 import { useCallback, useState } from 'react';
 import { ConfigModal } from '../components/notes/ConfigModal';
-import { TrashNotes } from '../components/notes/TrashNotes';
 import { useManageNote } from '../hook/useManageNote';
 
 export default function NotesPage() {
@@ -29,7 +28,6 @@ export default function NotesPage() {
       <Routes>
         <Route path="/" element={<MainNotes />} />
         <Route path="/tags" element={<div>Tags</div>} />
-        <Route path="/trash" element={<TrashNotes />} />
       </Routes>
       {selectedNote ? (
         <EditorNotes note={selectedNote} saveNote={saveNote} />

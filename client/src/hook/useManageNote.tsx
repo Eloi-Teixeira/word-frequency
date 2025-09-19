@@ -186,8 +186,6 @@ export const useManageNote = () => {
     setStatus(null);
     try {
       await handleCreateNote();
-      setSuccessMessage('Nota criada com sucesso!');
-      setStatus('success');
       navigate('/notes');
     } catch (error) {
       handleError(error);
