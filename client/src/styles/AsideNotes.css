@@ -1,34 +1,70 @@
 .aside-notes {
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  display: flex;
+  flex-direction: column;
+
   width: 300px;
   height: 100dvh;
   top: 0;
   left: 0;
   background-color: var(--gray8);
   color: var(--white);
-  padding: 80px 1.5rem 1.5rem;
+  padding: 0 1.5rem 1.5rem;
 }
 
-.aside-notes ul {
+.aside-notes .profile {
+  display: flex;
+  position: relative;
+  text-align: center;
+  align-items: center;
+  padding: 2rem 0 0;
+  margin-top: 0;
+  border-top: none;
+  gap: 1rem;
+}
+
+.aside-notes .profile .profile-img {
+  background: var(--gray5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--black);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.aside-notes .options {
   display: flex;
   flex-direction: column;
-  gap: .25rem;
+  gap: 0.25rem;
   margin-block: 1.5rem;
   width: 100%;
+  height: fit-content;
+  border-top: 1px solid var(--gray7);
+  padding-top: 2rem;
 }
 
-.aside-notes ul li {
-  border-radius: .8rem;
+.aside-notes .options li {
+  border-radius: 0.8rem;
   overflow: hidden;
   cursor: pointer;
   width: 100%;
 }
 
-.aside-notes ul li a {
-  padding: .75rem 1.5rem;
+.aside-notes .options li a {
+  padding: 0.75rem 1.5rem;
   width: 100%;
   display: flex;
+}
+
+.aside-notes .tags-container {
+  border-top: 1px solid var(--gray7);
+  border-bottom: 1px solid var(--gray7);
+  padding-bottom: 2rem;
 }
 
 .aside-notes .tags-header {
@@ -57,7 +93,7 @@
   text-transform: uppercase;
 }
 
-.aside-notes .tags-container .tag:hover,
+.aside-notes .tags-content .tag:hover,
 .aside-notes ul li a.active,
 .aside-notes ul li a:hover {
   background-color: var(--gray7);
@@ -67,36 +103,33 @@
   margin-right: 10px;
 }
 
-.aside-notes .tags-container {
+.aside-notes .tags-content {
   display: flex;
   flex-direction: column;
 }
 
-.aside-notes .tags-container .tag {
+.aside-notes .tags-content .tag {
   display: flex;
   align-items: center;
-  gap: .5rem;
-  padding: .5rem;
-  border-radius: .5rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
   cursor: pointer;
-}
-
-.aside-notes > div {
-  border-top: 1px solid var(--gray7);
 }
 
 .aside-notes footer {
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 0.5rem;
   height: 100%;
   text-align: center;
   color: var(--gray2);
+  justify-content: flex-end;
 }
 
 .aside-notes footer a {
   font-size: 0.8rem;
-  padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
   transition: all 0.3s ease;
 }
 

@@ -82,9 +82,11 @@ export default function UserAside() {
           )}
         </nav>
       </div>
-  
-        <Link to={'/'} className="back-home">Voltar para Home</Link>
-    
+
+      <Link to={'/notes'} className="back-home">
+        Voltar para as anotações
+      </Link>
+
       {Feedback}
     </aside>
   );

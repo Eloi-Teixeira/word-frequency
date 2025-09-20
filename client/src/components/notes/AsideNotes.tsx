@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
 import { useNotes } from '../../context/notesContext';
+import { useUser } from '../../context/userContext';
 import { Link, NavLink } from 'react-router-dom';
-import {
-  HelpCircle,
-  Settings,
-  StickyNote,
-  Tag,
-  Tags,
-  Trash,
-} from 'lucide-react';
+import { HelpCircle, Settings, StickyNote, Tag, User } from 'lucide-react';
+import LoadingPage from '../../pages/LoadingPage';
 
 export default function AsideNotes({}) {
   const [tags, setTags] = React.useState<string[]>([]);
   const { notes, setSearch } = useNotes();
+  const { user } = useUser();
 
   useEffect(() => {
     const activeNotes = notes.filter((note) => !note.isDeleted);
@@ -22,47 +18,44 @@ export default function AsideNotes({}) {
     setTags(allTags);
   }, [notes]);
 
+  if (!user) {
+    return <LoadingPage />;
+  }
+
   return (
     <aside className="aside-notes">
-      <div>
-        <ul>
-          <li>
-            <NavLink to={'/notes'} end onClick={() => setSearch('')}>
-              <StickyNote size={16} />
-              Todas as notas
-            </NavLink>
-          </li>
-          <li onClick={() => setSearch('')}>
-            <NavLink to="/notes/trash">
-              <Trash size={16} />
-              Lixeira
-            </NavLink>
-          </li>
-          <li>
-            <Link to={'/user'}>
-              <Settings size={16} />
-              Configurações
-            </Link>
-          </li>
-          <li>
-            <NavLink to={'/notes/tags'}>
-              <Tags size={16} />
-              Todas as Tags
-            </NavLink>
-          </li>
-          <li>
-            <Link to={'/about'}>
-              <HelpCircle size={16} />
-              Ajuda e Suporte
-            </Link>
-          </li>
-        </ul>
-      </div>
-      <div>
+      <Link to={'/user'} className="profile">
+        <div className="profile-img">
+          <User></User>
+        </div>
+        <h2 className="user-name">{user.name}</h2>
+      </Link>
+
+      <ul className="options">
+        <li>
+          <NavLink to={'/notes'} end onClick={() => setSearch('')}>
+            <StickyNote size={16} />
+            Todas as notas
+          </NavLink>
+        </li>
+        <li>
+          <Link to={'/user'}>
+            <Settings size={16} />
+            Configurações
+          </Link>
+        </li>
+        <li>
+          <Link to={'/about#help'}>
+            <HelpCircle size={16} />
+            Ajuda e Suporte
+          </Link>
+        </li>
+      </ul>
+      <div className='tags-container'>
         <div className="tags-header">
           <h2>Tags</h2>
         </div>
-        <div className="tags-container">
+        <div className="tags-content">
           {tags.length !== 0 ? (
             tags.map((tag, i) =>
               i < 9 ? (
