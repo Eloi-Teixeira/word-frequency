@@ -19,7 +19,7 @@ export default function NotesPage() {
       );
       setNotes(updatedNotes);
     },
-    [notes],
+    [notes, setNotes],
   );
 
   return (

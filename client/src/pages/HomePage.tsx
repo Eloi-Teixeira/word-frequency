@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion, MotionConfig } from 'framer-motion';
 import { CircleCheckBig, RefreshCcw, Shield, Zap } from 'lucide-react';
 import { useState } from 'react';
+import Footer from '../components/utils/Footer';
 
 export default function HomePage() {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
@@ -254,11 +255,7 @@ export default function HomePage() {
             </div>
           </section>
         </main>
-        <footer className="home-footer">
-          <p>
-            © {new Date().getFullYear()} Notare — Minimal notes, maximum focus.
-          </p>
-        </footer>
+        <Footer />
       </MotionConfig>
     </div>
   );

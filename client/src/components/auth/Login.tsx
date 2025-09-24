@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import useManageUser from '../../hook/useManageUser';
-import Input from '../helper/Input';
+import Input from '../utils/Input';
 
 export default function Login() {
   const { onLogin, Feedback, isLoading } = useManageUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = e.currentTarget.email.value.trim()
-    const password = e.currentTarget.password.value.trim()
+    const email = e.currentTarget.email.value.trim();
+    const password = e.currentTarget.password.value.trim();
     await onLogin(email, password);
   };
 
@@ -34,7 +34,9 @@ export default function Login() {
           autoComplete="off"
           required
         />
-        <button className="submit-btn" disabled={isLoading}>{isLoading ? "Carragando..." : "Entrar"}</button>
+        <button className="submit-btn" disabled={isLoading}>
+          {isLoading ? 'Carragando...' : 'Entrar'}
+        </button>
       </form>
       {Feedback}
     </div>

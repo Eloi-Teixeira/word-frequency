@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import useManageUser from '../../hook/useManageUser';
-import Input from '../helper/Input';
+import Input from '../utils/Input';
 
 export default function Signup() {
   const { onCreateUser, Feedback, isLoading } = useManageUser();
